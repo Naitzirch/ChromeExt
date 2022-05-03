@@ -1,0 +1,29 @@
+{
+    "manifest_version": 3,
+    "name": "CUBEYFY",
+    "description": "CUstom BEckground for Your ForYms. Add a custom background to the CubeCraft Forums.",
+    "version": "1.0",
+    "icons": {
+        "16": "/images/logo_16.png",
+        "48": "/images/logo_48.png",
+        "128": "/images/logo_128.png"
+    },
+    "action": {
+        "default_icon": {
+            "16": "/images/logo_16.png",
+            "48": "/images/logo_48.png",
+            "128": "/images/logo_128.png"
+        },
+        "default_popup": "popup.html"
+    },
+    "permissions": [
+        "activeTab",
+        "tabs",
+        "storage"
+    ],
+    "content_scripts": [{
+        "matches": ["<all_urls>"],
+        "js": ["app.js"],
+        "css": ["main.css"]
+    }]
+}

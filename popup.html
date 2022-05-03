@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CUBEYFY</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans" type="text/css">
+
+    <style>
+        html, body {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 14px;
+            margin: 0;
+            min-height: 300px;
+            padding: 0;
+            width: 384px;
+        }
+
+        h1 {
+            font-family: 'Menlo', monospace;
+            font-size: 22px;
+            font-size: 400;
+            margin: 0;
+            color: blueviolet;
+        }
+
+        a:link, a:visited {
+            color: #000;
+            outline: 0;
+            text-decoration: none;
+        }
+
+        img {
+            width: 30px;
+        }
+
+        .modal-header {
+            align-items: center;
+            border-bottom: 0.5px solid #dadada;
+        }
+
+        .modal-content {
+            padding: 0 20px;
+        }
+
+        .modal-presets {
+            border-top: 00.5px solid #dadada;
+            height: 50px;
+            width: 100%;
+        }
+
+        .logo {
+            padding: 16px;
+        }
+
+        .logo-icon {
+            vertical-align: text-bottom;
+            margin-right: 12px;
+        }
+
+        .version {
+            color: #444;
+            font-size: 18px;
+        }
+
+        .flex-container {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 20px;
+        }
+
+        .flex {
+            opacity: 1;
+            transition: opacity 0.2s ease-in-out;
+            width: 120px;
+        }
+
+        .flex:hover {
+            opacity: 0.4;
+        }
+
+        .flex .fa {
+            font-size: 40px;
+            color: #f564fa
+        }
+
+        .presets {
+            background-color: #444;
+            width: 5em;
+            height: 2.5em;
+        }
+
+        .presets:hover {
+            cursor: pointer;
+        }
+
+        input {
+            background-color: white;
+        }
+
+        input:focus {
+            outline: none;
+
+        }
+
+        input:focus::placeholder {
+            color: white;
+        }
+
+        #cbh {
+            display: flex;
+            justify-content: left;
+        }
+
+        #buttonWrapper {
+            padding: calc(1em - 5px);
+        }
+
+        #apply {
+            padding: 5px;
+            background-color: #efefef;
+            cursor: pointer;
+            user-select: none;
+            border-radius: 3px;
+        }
+
+        #messageContainer {
+            outline: none;
+            border: 1px solid #000;
+        }
+
+        #message {
+            padding: 0 5px;
+            caret-color: #000;
+            outline: none;
+            color: gray;
+        }
+
+
+
+
+    </style>
+</head>
+<body>
+    <div class="modal-header">
+        <h1 class="logo">
+        <img src="images/logo_128.png" alt="CUBEYFY" class="logo-icon"> CUBEYFY <span class="version">(1.0)</span>
+        </h1>
+    </div>
+    <div class="modal-content">
+        <p>Some text</p>
+    </div>
+    <!-- <div class="modal-presets">
+        <div class="flex-container">
+            <div class="flex">
+                <div class="presets" id="nyancat">
+                    
+                </div>
+            </div>
+            <div class="flex">
+                <div class="presets">
+                    
+                </div>
+            </div>
+            <div class="flex">
+                <div class="presets">
+
+                </div>
+            </div>
+            <div class="flex">
+                <div class="presets">
+                    
+                </div>
+            </div>
+            <div class="flex">
+                <div class="presets">
+                    
+                </div>
+            </div>
+        </div>
+    </div> -->
+    <div class="modal-content">
+        <div id="cbh">
+            <p>Custom background</p>
+            <div id="buttonWrapper">
+                <div id="apply">Apply</div>
+            </div>
+        </div>
+    </div>
+    <div id="input" class="modal-content">
+        <div id="messageContainer">
+            <div id="message" type="text" spellcheck="false" contenteditable="true">img URL</div>
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>

@@ -26,10 +26,10 @@ apply.addEventListener('click', function(){
 });
 
 function ApplyBG(background) {
-    console.log(background);
+    //console.log(background);
 
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-        chrome.tabs.sendMessage(tabs[0].id, {imageURL: "hello"}, function(response) {
+        chrome.tabs.sendMessage(tabs[0].id, {imageURL: background}, function(response) {
             console.log(response.farewell);
         });
     });

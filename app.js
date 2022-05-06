@@ -9,10 +9,12 @@ var site = location.href;
 var siteList = {};
 var imgURL;
 chrome.storage.sync.get(['sites'], function(result) {
-    siteList = result.sites;
+    if (result.sites) {
+        siteList = result.sites;
+    }
 
     // Set background if site is found in siteList
-    if (site in siteList) {
+    if (siteList && site in siteList) {
         imgURL = siteList[site].background;
         document.body.style.backgroundImage = `url(${imgURL})`;
     }
@@ -32,11 +34,6 @@ chrome.runtime.onMessage.addListener(
         siteList[site] = {background: imgURL};
         chrome.storage.sync.set({sites: siteList}, function() {
             console.log("siteList set");
-        });
-        
-        chrome.storage.sync.get(['sites'], function(result) {
-            siteList = result.sites;
-            console.log(siteList);
         });
         
         sendResponse({farewell: "goodbye"});

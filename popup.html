@@ -6,141 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CUBEYFY</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans" type="text/css">
-
-    <style>
-        html, body {
-            font-family: 'Open Sans', sans-serif;
-            font-size: 14px;
-            margin: 0;
-            min-height: 300px;
-            padding: 0;
-            width: 384px;
-        }
-
-        h1 {
-            font-family: 'Menlo', monospace;
-            font-size: 22px;
-            font-size: 400;
-            margin: 0;
-            color: blueviolet;
-        }
-
-        a:link, a:visited {
-            color: #000;
-            outline: 0;
-            text-decoration: none;
-        }
-
-        img {
-            width: 30px;
-        }
-
-        .modal-header {
-            align-items: center;
-            border-bottom: 0.5px solid #dadada;
-        }
-
-        .modal-content {
-            padding: 0 20px;
-        }
-
-        .modal-presets {
-            border-top: 00.5px solid #dadada;
-            height: 50px;
-            width: 100%;
-        }
-
-        .logo {
-            padding: 16px;
-        }
-
-        .logo-icon {
-            vertical-align: text-bottom;
-            margin-right: 12px;
-        }
-
-        .version {
-            color: #444;
-            font-size: 18px;
-        }
-
-        .flex-container {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 20px;
-        }
-
-        .flex {
-            opacity: 1;
-            transition: opacity 0.2s ease-in-out;
-            width: 120px;
-        }
-
-        .flex:hover {
-            opacity: 0.4;
-        }
-
-        .flex .fa {
-            font-size: 40px;
-            color: #f564fa
-        }
-
-        .presets {
-            background-color: #444;
-            width: 5em;
-            height: 2.5em;
-        }
-
-        .presets:hover {
-            cursor: pointer;
-        }
-
-        input {
-            background-color: white;
-        }
-
-        input:focus {
-            outline: none;
-
-        }
-
-        input:focus::placeholder {
-            color: white;
-        }
-
-        #cbh {
-            display: flex;
-            justify-content: left;
-        }
-
-        #buttonWrapper {
-            padding: calc(1em - 5px);
-        }
-
-        #apply {
-            padding: 5px;
-            background-color: #efefef;
-            cursor: pointer;
-            user-select: none;
-            border-radius: 3px;
-        }
-
-        #messageContainer {
-            outline: none;
-            border: 1px solid #000;
-        }
-
-        #message {
-            padding: 0 5px;
-            caret-color: #000;
-            outline: none;
-            color: gray;
-        }
-
-
-
-
-    </style>
+    <link rel="stylesheet" href="stylesheet.css">
 </head>
 <body>
     <div class="modal-header">
@@ -151,35 +17,30 @@
     <div class="modal-content">
         <p>Some text</p>
     </div>
-    <!-- <div class="modal-presets">
-        <div class="flex-container">
-            <div class="flex">
-                <div class="presets" id="nyancat">
-                    
-                </div>
-            </div>
-            <div class="flex">
-                <div class="presets">
-                    
-                </div>
-            </div>
-            <div class="flex">
-                <div class="presets">
 
+    <!-- Collapsibles -->
+    <div class="collapsible"><div class="collIcon"></div> Presets</div>
+    <div class="content">
+    <p>Lorem ipsum dolor</p>
+    </div>
+    <div class="collapsible"><div class="collIcon"></div>Color background</div>
+    <div class="content">
+        <div class="sub-content">
+            <div class="content-divider">
+                <label for="colorWell"><div id="color-display"></div></label>
+                <div id="hex-wrapper">
+                    <div id="hex-input" class="messageContainer">
+                        <div id="hex-field" class="message" type="text" spellcheck="false" contenteditable="true">
+                            <code id="hex-code">#ffffff</code>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="flex">
-                <div class="presets">
-                    
-                </div>
-            </div>
-            <div class="flex">
-                <div class="presets">
-                    
-                </div>
-            </div>
-        </div>
-    </div> -->
+            <input type="color" value="#ffffff" id="colorWell">
+        </div> 
+    </div>
+    <!-- End Collapsibles -->
+
     <div class="modal-content">
         <div id="cbh">
             <p>Custom background</p>
@@ -188,9 +49,9 @@
             </div>
         </div>
     </div>
-    <div id="input" class="modal-content">
-        <div id="messageContainer">
-            <div id="message" type="text" spellcheck="false" contenteditable="true">img URL</div>
+    <div class="modal-content">
+        <div class="messageContainer">
+            <div id="imgURL" class="message" type="text" spellcheck="false" contenteditable="true">img URL</div>
         </div>
     </div>
 

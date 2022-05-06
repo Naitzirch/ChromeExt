@@ -1,0 +1,174 @@
+html, body {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+    margin: 0;
+    min-height: 300px;
+    padding: 0;
+    width: 384px;
+}
+
+h1 {
+    font-family: 'Menlo', monospace;
+    font-size: 22px;
+    font-size: 400;
+    margin: 0;
+    color: blueviolet;
+}
+
+a:link, a:visited {
+    color: #000;
+    outline: 0;
+    text-decoration: none;
+}
+
+img {
+    width: 30px;
+}
+
+.modal-header {
+    align-items: center;
+    border-bottom: 0.5px solid #dadada;
+}
+
+.modal-content {
+    padding: 0 20px;
+}
+
+.modal-presets {
+    border-top: 00.5px solid #dadada;
+    height: 50px;
+    width: 100%;
+}
+
+.logo {
+    padding: 16px;
+}
+
+.logo-icon {
+    vertical-align: text-bottom;
+    margin-right: 12px;
+}
+
+.version {
+    color: #444;
+    font-size: 18px;
+}
+
+.flex-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
+}
+
+.flex {
+    opacity: 1;
+    transition: opacity 0.2s ease-in-out;
+    width: 120px;
+}
+
+.flex:hover {
+    opacity: 0.4;
+}
+
+.flex .fa {
+    font-size: 40px;
+    color: #f564fa
+}
+
+/* Collapsibles */
+.collapsible {
+    background-color: #e7e9eb;
+    cursor: pointer;
+    padding: 0.8em;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+}
+
+.active, .collapsible:hover {
+    background-color: #d9d9d9;
+}
+
+/* ingeklapt */
+.collIcon:after {
+    width: 1em;
+    content: '\2B9A';
+    font-weight: bold;
+    float: left;
+    margin: 0 0.5em;
+}
+
+/* uitgeklapt */
+.collIcon.active:after {
+    content: "\2B9F";
+}
+
+.content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+    background-color: #f1f1f1;
+}
+
+.sub-content {
+    padding: 1em;
+}
+
+.content-divider {
+    display: flex;
+    justify-content: left;
+}
+
+/* Color tab */
+#colorWell {
+    visibility: hidden;
+}
+
+#color-display {
+    cursor: pointer;
+    border: 1px solid grey;
+    height: 2em;
+    width: 2em;
+    background-color: rgb(255, 255, 255);
+    border-radius: 50%;
+}
+
+#hex-wrapper {
+    padding: calc(1em - 8px);
+}
+
+#hex-input {
+    width: 5em;
+}
+
+/* Custom background section */
+#cbh {
+    display: flex;
+    justify-content: left;
+}
+
+#buttonWrapper {
+    padding: calc(1em - 5px);
+}
+
+#apply {
+    padding: 5px;
+    background-color: #efefef;
+    cursor: pointer;
+    user-select: none;
+    border-radius: 3px;
+}
+
+.messageContainer {
+    outline: none;
+    border: 1px solid #000;
+}
+
+.message {
+    padding: 0 5px;
+    caret-color: #000;
+    outline: none;
+    color: gray;
+}

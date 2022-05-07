@@ -1,6 +1,42 @@
+// Naitzirch 2022
+// 
+// Frontend for Custom Background Extension
+
 // Query DOM
 var apply = document.getElementsByClassName("apply");
     imgURL = document.getElementById('imgURL');
+    hexCode = document.getElementById('hex-code');
+    cd = document.getElementById('color-display');
+    colorWell = document.querySelector("#colorWell");
+    
+    
+// Request information from the app running on the site
+var siteList;
+var site;
+var defaultColor;
+window.addEventListener('load', (event) => {
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        // Request data from app
+        chrome.tabs.sendMessage(tabs[0].id, "siteData", function(response) {
+            // Log app's response
+            console.log(response);
+            siteList = response.siteList;
+            site = response.site;
+
+            // Everything that needs initialization with site data
+            if (site in siteList) {
+                var background = siteList[site].background;
+                if (isHex(background)) {
+                    hexCode.innerHTML = background;
+                    defaultColor = hexCode.innerHTML;
+                    cd.style.backgroundColor = defaultColor;
+                    colorWell.value = defaultColor;
+                }
+            }
+
+        });
+    });
+});
 
 
 // Fancy button smh...
@@ -57,12 +93,7 @@ for (i = 0; i < coll.length; i++) {
 }
 
 // Color tab logic
-var colorWell;
 var hexField = document.getElementById('hex-field');
-var hexCode = document.getElementById('hex-code');
-var defaultColor = hexCode.innerHTML;
-var cd = document.getElementById('color-display');
-
 
 hexField.addEventListener("keydown", keydown);
 
@@ -82,8 +113,6 @@ hexField.addEventListener('blur', () => {
 window.addEventListener("load", startup, false);
 
 function startup() {
-    colorWell = document.querySelector("#colorWell");
-    colorWell.value = defaultColor;
     colorWell.addEventListener("input", updateFirst, false);
     colorWell.addEventListener("change", updateAll, false);
     colorWell.select();
@@ -110,10 +139,10 @@ function updateAll(event) {
         return response.json();
     })
     .then(presetsData => {
-        console.log(presetsData);
+        //console.log(presetsData);
 
         Object.keys(presetsData).forEach(function(k){
-            console.log(k + ' - ' + presetsData[k]);
+            //console.log(k + ' - ' + presetsData[k]);
         });
         
     });
@@ -146,18 +175,14 @@ function ApplyBG(bg) {
 }
 
 
-// Listen for information from background app startup
-chrome.runtime.onMessage.addListener(
-    function(request, sender, sendResponse) {
-        console.log("from a content script:" + sender.tab.url);
-        var siteList;
-        var site;
-        if (request.siteList && request.site) {
-            siteList = request.siteList;
-            site = request.site;
-            sendResponse({farewell: "siteList and site sent succesfully."})
-        }
-        console.log(site);
-        console.log(siteList);
+// Helper functions
+function isHex(inputString) {
+    inputString = inputString.substring(1);
+    if (inputString.length > 6) {
+        return false;
     }
-);
+    else {
+        var re = /[0-9A-Fa-f]{6}/g;
+        return re.test(inputString);
+    }
+}

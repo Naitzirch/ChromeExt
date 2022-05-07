@@ -12,9 +12,6 @@ var bgColor;
 chrome.storage.sync.get(['sites'], function(result) {
     if (result.sites) {
         siteList = result.sites;
-        chrome.runtime.sendMessage({siteList: siteList, site: site}, function(response) {
-            console.log(response.farewell);
-        });
     }
 
     // Set background if site is found in siteList
@@ -29,33 +26,49 @@ chrome.storage.sync.get(['sites'], function(result) {
 });
 
 
-// listener
+// listeners
+
+// Site Data request
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
-        
-        var background = request.background;
-        console.log(background);
-
-        // Apply background immediately
-        if (isHex(background)) {
-            console.log("hi2");
-            document.body.style.backgroundColor = background;
+        if (request === "siteData") {
+            sendResponse({siteList: siteList, site: site});
         }
-        else {
-            console.log("hi!");
-            document.body.style.backgroundImage = `url(${background})`;
-        }
-
-        // Store background + settings for this site
-        siteList[site] = {background: background};
-        chrome.storage.sync.set({sites: siteList}, function() {
-            console.log("siteList set");
-        });
-        
-        sendResponse({farewell: "goodbye"});
     }
 );
 
+
+// Background applied
+chrome.runtime.onMessage.addListener(
+    function(request, sender, sendResponse) {
+        if (request.background) {
+            var background = request.background;
+            console.log(background);
+
+            // Apply background immediately
+            if (isHex(background)) {
+                console.log("hi2");
+                document.body.style.backgroundColor = background;
+                document.body.style.backgroundImage = "";
+            }
+            else {
+                console.log("hi!");
+                document.body.style.backgroundImage = `url(${background})`;
+            }
+
+            // Store background + settings for this site
+            siteList[site] = {background: background};
+            chrome.storage.sync.set({sites: siteList}, function() {
+                console.log("siteList set");
+            });
+            
+            sendResponse({farewell: "goodbye"});
+        }
+    }
+);
+
+
+// Helper functions
 function isHex(inputString) {
     inputString = inputString.substring(1);
     if (inputString.length > 6) {

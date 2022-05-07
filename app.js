@@ -8,6 +8,7 @@
 var site = location.href;
 var siteList = {};
 var imgURL;
+var bgColor;
 chrome.storage.sync.get(['sites'], function(result) {
     if (result.sites) {
         siteList = result.sites;
@@ -15,8 +16,12 @@ chrome.storage.sync.get(['sites'], function(result) {
 
     // Set background if site is found in siteList
     if (siteList && site in siteList) {
-        imgURL = siteList[site].background;
-        document.body.style.backgroundImage = `url(${imgURL})`;
+        var background = siteList[site].background;
+        if (isHex(background))
+            document.body.style.backgroundColor = background;
+        else {
+            document.body.style.backgroundImage = `url(${background})`;
+        }
     }
 });
 
@@ -25,13 +30,21 @@ chrome.storage.sync.get(['sites'], function(result) {
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
         
-        imgURL = request.imageURL;
+        var background = request.background;
+        console.log(background);
 
         // Apply background immediately
-        document.body.style.backgroundImage = `url(${imgURL})`;
+        if (isHex(background)) {
+            console.log("hi2");
+            document.body.style.backgroundColor = background;
+        }
+        else {
+            console.log("hi!");
+            document.body.style.backgroundImage = `url(${background})`;
+        }
 
         // Store background + settings for this site
-        siteList[site] = {background: imgURL};
+        siteList[site] = {background: background};
         chrome.storage.sync.set({sites: siteList}, function() {
             console.log("siteList set");
         });
@@ -40,3 +53,13 @@ chrome.runtime.onMessage.addListener(
     }
 );
 
+function isHex(inputString) {
+    inputString = inputString.substring(1);
+    if (inputString.length > 6) {
+        return false;
+    }
+    else {
+        var re = /[0-9A-Fa-f]{6}/g;
+        return re.test(inputString);
+    }
+}

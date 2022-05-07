@@ -21,7 +21,9 @@
     <!-- Collapsibles -->
     <div class="collapsible"><div class="collIcon"></div> Presets</div>
     <div class="content">
-    <p>Lorem ipsum dolor</p>
+    <div id="preset-container">
+        Test
+    </div>
     </div>
     <div class="collapsible"><div class="collIcon"></div>Color background</div>
     <div class="content">
@@ -35,6 +37,9 @@
                         </div>
                     </div>
                 </div>
+                <div id="button-wrapper-color">
+                    <div id="apply-color" class="apply">Apply</div>
+                </div>
             </div>
             <input type="color" value="#ffffff" id="colorWell">
         </div> 
@@ -44,17 +49,17 @@
     <div class="modal-content">
         <div id="cbh">
             <p>Custom background</p>
-            <div id="buttonWrapper">
-                <div id="apply">Apply</div>
+            <div id="button-wrapper">
+                <div id="apply-img" class="apply">Apply</div>
             </div>
         </div>
     </div>
-    <div class="modal-content">
+    <div id="imgURL-container" class="modal-content">
         <div class="messageContainer">
             <div id="imgURL" class="message" type="text" spellcheck="false" contenteditable="true">img URL</div>
         </div>
     </div>
-
-    <script src="popup.js"></script>
+    <!-- <script type="text/javascript" src="presets/presets.json"></script> -->
+    <script type="text/javascript" src="popup.js"></script>
 </body>
 </html>

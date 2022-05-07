@@ -181,3 +181,14 @@ img {
 #preset-container {
     padding: 1em;
 }
+
+.preset-card {
+    width: 6em;
+    text-align: center;
+}
+
+.preset-icons {
+    width: 6em;
+    border-radius: 12px;
+    border: 2px solid grey;
+}

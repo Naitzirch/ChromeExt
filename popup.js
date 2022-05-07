@@ -144,3 +144,20 @@ function ApplyBG(bg) {
         });
     });
 }
+
+
+// Listen for information from background app startup
+chrome.runtime.onMessage.addListener(
+    function(request, sender, sendResponse) {
+        console.log("from a content script:" + sender.tab.url);
+        var siteList;
+        var site;
+        if (request.siteList && request.site) {
+            siteList = request.siteList;
+            site = request.site;
+            sendResponse({farewell: "siteList and site sent succesfully."})
+        }
+        console.log(site);
+        console.log(siteList);
+    }
+);

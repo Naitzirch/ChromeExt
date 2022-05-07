@@ -12,6 +12,9 @@ var bgColor;
 chrome.storage.sync.get(['sites'], function(result) {
     if (result.sites) {
         siteList = result.sites;
+        chrome.runtime.sendMessage({siteList: siteList, site: site}, function(response) {
+            console.log(response.farewell);
+        });
     }
 
     // Set background if site is found in siteList

@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
-    "name": "CUBEYFY",
-    "description": "CUstom BEckground for Your ForYms. Add a custom background to the CubeCraft Forums.",
+    "name": "CUBEFISH",
+    "description": "CUstom Background Extension For Internet Site Hypermedia. Add a custom background to your websites.",
     "version": "1.0",
     "icons": {
         "16": "/images/logo_16.png",

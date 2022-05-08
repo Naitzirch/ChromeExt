@@ -1,8 +1,14 @@
 {
-    "nyancat": {
-        "bg": "nyancat.gif"
+    "houses": {
+        "name": "houses",
+        "bg": "houses.png"
     },
-    "cuboid": {
-        "bg": "cuboid.png"
+    "victorianR": {
+        "name": "victorianR",
+        "bg": "victorianR.png"
+    },
+    "nyancat": {
+        "name": "nyancat",
+        "bg": "nyancat.gif"
     }
 }

@@ -19,18 +19,21 @@ window.addEventListener('load', (event) => {
         // Request data from app
         chrome.tabs.sendMessage(tabs[0].id, "siteData", function(response) {
             // Log app's response
-            console.log(response);
-            siteList = response.siteList;
-            site = response.site;
+            if (response) {
+                console.log(response);
+                siteList = response.siteList;
+                site = response.site;
+            
 
-            // Everything that needs initialization with site data
-            if (site in siteList) {
-                var background = siteList[site].background;
-                if (isHex(background)) {
-                    hexCode.innerHTML = background;
-                    defaultColor = hexCode.innerHTML;
-                    cd.style.backgroundColor = defaultColor;
-                    colorWell.value = defaultColor;
+                // Everything that needs initialization with site data
+                if (site in siteList) {
+                    var background = siteList[site].background;
+                    if (isHex(background)) {
+                        hexCode.innerHTML = background;
+                        defaultColor = hexCode.innerHTML;
+                        cd.style.backgroundColor = defaultColor;
+                        colorWell.value = defaultColor;
+                    }
                 }
             }
 
@@ -134,18 +137,41 @@ function updateAll(event) {
 
 // Preset tab logic
 {
+    var presetContainer = document.getElementById('preset-container');
+    
     fetch("presets/presets.json")
     .then(response => {
         return response.json();
     })
     .then(presetsData => {
-        //console.log(presetsData);
-
         Object.keys(presetsData).forEach(function(k){
-            //console.log(k + ' - ' + presetsData[k]);
+            var presetIcon = "empty";
+            var name = "empty";
+            var bgid = "empty.png";
+            if (k) {
+                presetIcon = k;
+                name = presetsData[k].name;
+                bgid = presetsData[k].bg;
+                var card = 
+                `
+                <div class="preset-card">
+                        <img id="${bgid}" class="preset-icons" src="presets/icons/${presetIcon}.png" alt="${name}">
+                        <span>${name}</span>
+                </div>
+                `;
+                presetContainer.innerHTML += card;
+            }
         });
-        
+
+        var presetIcons = document.getElementsByClassName('preset-icons');
+        for (i = 0; i < presetIcons.length; i++) {
+            presetIcons[i].addEventListener("click", function() {
+                ApplyBG(chrome.runtime.getURL(`presets/images/${this.id}`));
+            });
+        }
+
     });
+
 }
 
 // Check if the user clicked on Apply color.

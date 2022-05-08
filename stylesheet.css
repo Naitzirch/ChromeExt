@@ -8,20 +8,16 @@ html, body {
 
 h1 {
     font-family: 'Menlo', monospace;
-    font-size: 22px;
+    font-size: 2em;
     font-size: 400;
     margin: 0;
-    color: blueviolet;
+    color: #22577E;
 }
 
 a:link, a:visited {
     color: #000;
     outline: 0;
     text-decoration: none;
-}
-
-img {
-    width: 30px;
 }
 
 .modal-header {
@@ -44,6 +40,7 @@ img {
 }
 
 .logo-icon {
+    width: 48px;
     vertical-align: text-bottom;
     margin-right: 12px;
 }
@@ -51,12 +48,6 @@ img {
 .version {
     color: #444;
     font-size: 18px;
-}
-
-.flex-container {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 20px;
 }
 
 .flex {
@@ -178,17 +169,30 @@ img {
 
 /* Presets */
 
+/* .flex-container {
+    display: flex;
+    justify-content: space-between;
+} */
+
 #preset-container {
     padding: 1em;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: left;
 }
 
 .preset-card {
-    width: 6em;
+    /* display: inline-block; */
+    padding: 0.5em 0 0.5em 0;
+    flex-basis: 33.333333%;
     text-align: center;
 }
 
 .preset-icons {
-    width: 6em;
+    width: 96px;
+    height: 54px;
     border-radius: 12px;
     border: 2px solid grey;
+    cursor: pointer;
 }

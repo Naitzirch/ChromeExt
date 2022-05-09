@@ -1,0 +1,3 @@
+empty: 96x54
+retro_numbers: 384x216
+sakura: 288x162

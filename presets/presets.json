@@ -1,14 +1,30 @@
 {
-    "houses": {
-        "name": "houses",
-        "bg": "houses.png"
+    "trees": {
+        "name": "trees",
+        "bg": "trees.webp"
     },
     "victorianR": {
         "name": "victorianR",
         "bg": "victorianR.png"
     },
+    "MAVI_tiles": {
+        "name": "MAVI tiles",
+        "bg": "MAVI_tiles.webp"
+    },
+    "retro_numbers": {
+        "name": "retro numbers",
+        "bg": "retro_numbers.webp"
+    },
     "nyancat": {
         "name": "nyancat",
         "bg": "nyancat.gif"
+    },
+    "sakura": {
+        "name": "sakura",
+        "bg": "sakura.png"
+    },
+    "hive": {
+        "name": "hive",
+        "bg": "hive.jpg"
     }
 }

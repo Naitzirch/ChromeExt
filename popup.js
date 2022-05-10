@@ -20,7 +20,6 @@ window.addEventListener('load', (event) => {
         chrome.tabs.sendMessage(tabs[0].id, "siteData", function(response) {
             // Log app's response
             if (response) {
-                console.log(response);
                 siteList = response.siteList;
                 site = response.site;
             
@@ -76,6 +75,34 @@ imgURL.addEventListener('click', function(){
 //     var text = e.clipboardData.getData('text/plain');
 //     document.execCommand('insertText', false, text);
 // });
+
+// Tabs
+var tabList = document.getElementsByClassName('tablinks');
+var k;
+for (k = 0; k < tabList.length; k++) {
+    tabList[k].addEventListener('click', function() {
+        return openCity(this);
+    });
+}
+
+function openCity(curTab) {
+    var i, tabcontent, tablinks, cityName, curTabContent;
+    cityName = curTab.innerHTML;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    curTab.className += " active";
+    curTabContent = document.getElementById(cityName);
+    curTabContent.style.display = "block";
+  }
+  
+  // Get the element with id="defaultOpen" and click on it
+  document.getElementById("defaultOpen").click();
 
 // Collapsibles
 var collIcon = document.getElementsByClassName("collIcon");

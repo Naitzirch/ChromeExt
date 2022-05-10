@@ -11,54 +11,75 @@
 <body>
     <div class="modal-header">
         <h1 class="logo">
-        <img src="images/logo_128.png" alt="Cubefish" class="logo-icon">Cubefish <span class="version">v.(1.0)ALPHA</span>
+        <img src="images/logo_128.png" alt="Cubefish" class="logo-icon">Cubefish <span class="version">v.(1.1)ALPHA</span>
         </h1>
     </div>
     <div class="modal-content">
         <p>Some text</p>
     </div>
 
-    <!-- Collapsibles -->
-    <div class="collapsible"><div class="collIcon"></div>Presets</div>
-    <div class="content">
-        <div id="preset-container">
-        </div>
+    <!-- Tabs -->
+    <div class="tab">
+        <button class="tablinks" id="defaultOpen">Add</button>
+        <button class="tablinks" >List</button>
+        <button class="tablinks" >Info</button>
     </div>
-    <div class="collapsible"><div class="collIcon"></div>Color background</div>
-    <div class="content">
-        <div class="sub-content">
-            <div class="content-divider">
-                <label for="colorWell"><div id="color-display"></div></label>
-                <div id="hex-wrapper">
-                    <div id="hex-input" class="messageContainer">
-                        <div id="hex-field" class="message" type="text" spellcheck="false" contenteditable="true">
-                            <code id="hex-code">#ffffff</code>
+
+    <div id="Add" class="tabcontent">
+        <!-- Collapsibles -->
+        <div class="collapsible"><div class="collIcon"></div>Presets</div>
+        <div class="content">
+            <div id="preset-container">
+            </div>
+        </div>
+        <div class="collapsible"><div class="collIcon"></div>Color background</div>
+        <div class="content">
+            <div class="sub-content">
+                <div class="content-divider">
+                    <label for="colorWell"><div id="color-display"></div></label>
+                    <div id="hex-wrapper">
+                        <div id="hex-input" class="messageContainer">
+                            <div id="hex-field" class="message" type="text" spellcheck="false" contenteditable="true">
+                                <code id="hex-code">#ffffff</code>
+                            </div>
                         </div>
                     </div>
+                    <div id="button-wrapper-color">
+                        <div id="apply-color" class="apply">Apply</div>
+                    </div>
                 </div>
-                <div id="button-wrapper-color">
-                    <div id="apply-color" class="apply">Apply</div>
-                </div>
-            </div>
-            <input type="color" value="#ffffff" id="colorWell">
-        </div> 
-    </div>
-    <!-- End Collapsibles -->
+                <input type="color" value="#ffffff" id="colorWell">
+            </div> 
+        </div>
+        <!-- End Collapsibles -->
+    
 
-    <div class="modal-content">
-        <div id="cbh">
-            <p>Custom background</p>
-            <div id="button-wrapper">
-                <div id="apply-img" class="apply">Apply</div>
+        <div class="modal-content">
+            <div id="cbh">
+                <p>Custom background</p>
+                <div id="button-wrapper">
+                    <div id="apply-img" class="apply">Apply</div>
+                </div>
             </div>
         </div>
-    </div>
-    <div id="imgURL-container" class="modal-content">
-        <div class="messageContainer">
-            <div id="imgURL" class="message" type="text" spellcheck="false" contenteditable="true">img URL</div>
+        <div id="imgURL-container" class="modal-content">
+            <div class="messageContainer">
+                <div id="imgURL" class="message" type="text" spellcheck="false" contenteditable="true">img URL</div>
+            </div>
         </div>
+
     </div>
-    <!-- <script type="text/javascript" src="presets/presets.json"></script> -->
+    
+    <div id="List" class="tabcontent">
+        <h3>Paris</h3>
+        <p>Paris is the capital of France.</p> 
+    </div>
+      
+    <div id="Info" class="tabcontent">
+        <h3>Tokyo</h3>
+        <p>Tokyo is the capital of Japan.</p>
+    </div>
+
     <script type="text/javascript" src="popup.js"></script>
 </body>
 </html>

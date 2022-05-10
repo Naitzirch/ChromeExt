@@ -29,12 +29,6 @@ a:link, a:visited {
     padding: 0 20px;
 }
 
-.modal-presets {
-    border-top: 00.5px solid #dadada;
-    height: 50px;
-    width: 100%;
-}
-
 .logo {
     padding: 16px;
 }
@@ -50,24 +44,46 @@ a:link, a:visited {
     font-size: 18px;
 }
 
-.flex {
-    opacity: 1;
-    transition: opacity 0.2s ease-in-out;
-    width: 120px;
+/* Tabs */
+/* Style the tab */
+.tab {
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+    background-color: #f1f1f1;
 }
-
-.flex:hover {
-    opacity: 0.4;
+  
+/* Style the buttons inside the tab */
+.tab button {
+    background-color: inherit;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 0.5em 2em;
+    margin-top: 1em;
+    transition: 0.3s;
+    font-size: 17px;
 }
-
-.flex .fa {
-    font-size: 40px;
-    color: #f564fa
+  
+/* Change background color of buttons on hover */
+.tab button:hover {
+    background-color: #ddd;
+}
+  
+/* Create an active/current tablink class */
+.tab button.active {
+    background-color: #ccc;
+}
+  
+/* Style the tab content */
+.tabcontent {
+    display: none;
 }
 
 /* Collapsibles */
 .collapsible {
     background-color: #e7e9eb;
+    transition: 0.3s;
     cursor: pointer;
     padding: 0.8em;
     width: 100%;
@@ -153,6 +169,7 @@ a:link, a:visited {
     cursor: pointer;
     user-select: none;
     border-radius: 3px;
+    transition: 0.3s;
 }
 
 .messageContainer {
@@ -175,6 +192,8 @@ a:link, a:visited {
 } */
 
 #preset-container {
+    overflow: auto;
+    max-height: 15em;
     padding: 1em;
     display: flex;
     flex-direction: row;
@@ -195,4 +214,25 @@ a:link, a:visited {
     border-radius: 12px;
     border: 2px solid grey;
     cursor: pointer;
+}
+
+/* scrollbar */
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: rgb(121, 121, 121);
 }

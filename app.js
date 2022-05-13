@@ -6,6 +6,7 @@
 
 // Get the site data from storage
 var site = location.href;
+var hostname = location.hostname;
 var siteList = {};
 var imgURL;
 var bgColor;
@@ -32,7 +33,7 @@ chrome.storage.sync.get(['sites'], function(result) {
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
         if (request === "siteData") {
-            sendResponse({siteList: siteList, site: site});
+            sendResponse({siteList: siteList, site: site, hostname: hostname});
         }
     }
 );
@@ -42,24 +43,24 @@ chrome.runtime.onMessage.addListener(
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
         if (request.background) {
+            console.log(request);
+            var pSelect = request.pSelect;
+            console.log(pSelect);
             var background = request.background;
             console.log(background);
 
             // Apply background immediately
             if (isHex(background)) {
-                console.log("hi2");
                 document.body.style.backgroundColor = background;
                 document.body.style.backgroundImage = "";
             }
             else {
-                console.log("hi!");
                 document.body.style.backgroundImage = `url(${background})`;
             }
 
             // Store background + settings for this site
             siteList[site] = {background: background};
             chrome.storage.sync.set({sites: siteList}, function() {
-                console.log("siteList set");
             });
             
             sendResponse({farewell: "goodbye"});

@@ -22,7 +22,7 @@ a:link, a:visited {
 
 .modal-header {
     align-items: center;
-    border-bottom: 0.5px solid #dadada;
+    /* border-bottom: 0.5px solid #dadada; */
 }
 
 .modal-content {
@@ -60,7 +60,6 @@ a:link, a:visited {
     outline: none;
     cursor: pointer;
     padding: 0.5em 2em;
-    margin-top: 1em;
     transition: 0.3s;
     font-size: 17px;
 }
@@ -78,6 +77,12 @@ a:link, a:visited {
 /* Style the tab content */
 .tabcontent {
     display: none;
+}
+
+/* Page selector */
+#page-selector {
+    padding-top: 1em;
+    padding-bottom: 1em;
 }
 
 /* Collapsibles */

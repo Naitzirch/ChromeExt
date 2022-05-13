@@ -8,35 +8,50 @@ var apply = document.getElementsByClassName("apply");
     hexCode = document.getElementById('hex-code');
     cd = document.getElementById('color-display');
     colorWell = document.querySelector("#colorWell");
-    
+
+var thisPageOnly = document.getElementById('one-p');
+    allPagesFrom = document.getElementById('all-p');
+    domainSregex = document.getElementById('regex-p');
     
 // Request information from the app running on the site
 var siteList;
 var site;
+var hostname;
 var defaultColor;
+var ibpB;
 window.addEventListener('load', (event) => {
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-        // Request data from app
-        chrome.tabs.sendMessage(tabs[0].id, "siteData", function(response) {
-            // Log app's response
-            if (response) {
-                siteList = response.siteList;
-                site = response.site;
-            
+        // Check if we are on an internal browser page
+        var ibp = "chrome://";
+        ibpB = tabs[0].url.substring(0, ibp.length) === ibp;
+        if (! ibpB ) {
+            // Request data from app
+            chrome.tabs.sendMessage(tabs[0].id, "siteData", function(response) {
+                // Log app's response
+                if (response) {
+                    siteList = response.siteList;
+                    site = response.site;
+                    hostname = response.hostname;
 
-                // Everything that needs initialization with site data
-                if (site in siteList) {
-                    var background = siteList[site].background;
-                    if (isHex(background)) {
-                        hexCode.innerHTML = background;
-                        defaultColor = hexCode.innerHTML;
-                        cd.style.backgroundColor = defaultColor;
-                        colorWell.value = defaultColor;
+                    // Everything that needs initialization with site data
+
+                    // set domain in page-select form
+                    allPagesFrom.labels[0].firstElementChild.innerHTML = hostname;
+
+                    // set color inside the color tab
+                    if (site in siteList) {
+                        var background = siteList[site].background;
+                        if (isHex(background)) {
+                            hexCode.innerHTML = background;
+                            defaultColor = hexCode.innerHTML;
+                            cd.style.backgroundColor = defaultColor;
+                            colorWell.value = defaultColor;
+                        }
                     }
                 }
-            }
 
-        });
+            });
+        }
     });
 });
 
@@ -81,11 +96,11 @@ var tabList = document.getElementsByClassName('tablinks');
 var k;
 for (k = 0; k < tabList.length; k++) {
     tabList[k].addEventListener('click', function() {
-        return openCity(this);
+        return openTab(this);
     });
 }
 
-function openCity(curTab) {
+function openTab(curTab) {
     var i, tabcontent, tablinks, cityName, curTabContent;
     cityName = curTab.innerHTML;
     tabcontent = document.getElementsByClassName("tabcontent");
@@ -99,10 +114,10 @@ function openCity(curTab) {
     curTab.className += " active";
     curTabContent = document.getElementById(cityName);
     curTabContent.style.display = "block";
-  }
-  
-  // Get the element with id="defaultOpen" and click on it
-  document.getElementById("defaultOpen").click();
+}
+
+// Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
 
 // Collapsibles
 var collIcon = document.getElementsByClassName("collIcon");
@@ -217,13 +232,32 @@ applyIMG.addEventListener('click', function(){
 });
 
 function ApplyBG(bg) {
+    if (ibpB) {
+        return;
+    }
     // Check which tab is the running tab
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+
+        // Check the page selector form
+        var pageSelector;
+        if (thisPageOnly.checked)
+            pageSelector = 1;
+        else if (allPagesFrom.checked)
+            pageSelector = 2;
+        else if (domainSregex)
+            pageSelector = 3;
+
         // Emit message with background to the app running on the active website
-        chrome.tabs.sendMessage(tabs[0].id, {background: bg}, function(response) {
+        chrome.tabs.sendMessage(tabs[0].id,
+            {
+                pSelect: pageSelector,
+                background: bg
+            },
+            function(response) {
             // Log app's response
             console.log(response.farewell);
         });
+        
     });
 }
 

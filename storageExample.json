@@ -1,0 +1,23 @@
+{
+    "sites": {
+        "http://www.google.com/specificpage": {
+            "background": "#ffffff"
+        },
+        "http://www.foobar.com/specificpage2": {
+            "background": "#fffaaa"
+        }
+    },
+    "hostnames": {
+        "www.google.com": {
+            "regexA": [
+                {"regex": "*", "background": "#fffbbb"},
+                {"regex": "AAAA", "background": "#AAAAAA"}
+            ]
+        },
+        "www.foobar.com": {
+            "regexA": [
+                {"regex": "http://www.foobar.com/search", "background": "someurl"}
+            ]
+        }
+    }
+}

@@ -12,6 +12,8 @@ var apply = document.getElementsByClassName("apply");
 var thisPageOnly = document.getElementById('one-p');
     allPagesFrom = document.getElementById('all-p');
     domainSregex = document.getElementById('regex-p');
+
+var regexField = document.getElementById('regex-field');
     
 // Request information from the app running on the site
 var siteList;
@@ -37,6 +39,7 @@ window.addEventListener('load', (event) => {
 
                     // set domain in page-select form
                     allPagesFrom.labels[0].firstElementChild.innerHTML = hostname;
+                    regexField.innerHTML = hostname.replace(/[-[\]{}()*+?.,\\/^$|#\s]/g, '\\$&');
 
                     // set color inside the color tab
                     if (site in siteList) {
@@ -137,45 +140,9 @@ for (i = 0; i < coll.length; i++) {
     });
 }
 
-// Color tab logic
-var hexField = document.getElementById('hex-field');
+// Page Selector logic
 
-hexField.addEventListener("keydown", keydown);
 
-function keydown (e){
-    if(e.keyCode===13){
-        hexField.blur();
-    }
-    console.info(e.keyCode);
-}
-
-hexField.addEventListener('blur', () => {
-    defaultColor = hexCode.innerHTML;
-    colorWell.value = defaultColor;
-    cd.style.backgroundColor = defaultColor;
-});
-
-window.addEventListener("load", startup, false);
-
-function startup() {
-    colorWell.addEventListener("input", updateFirst, false);
-    colorWell.addEventListener("change", updateAll, false);
-    colorWell.select();
-}
-
-function updateFirst(event) {
-
-    if (cd) {
-        cd.style.backgroundColor = event.target.value;
-        hexCode.innerHTML = event.target.value;
-    }
-}
-
-function updateAll(event) {
-    document.querySelectorAll("#color-display").forEach(function(cd) {
-        //cd.style.backgroundColor = event.target.value;
-    });
-}
 
 // Preset tab logic
 {
@@ -216,6 +183,46 @@ function updateAll(event) {
 
 }
 
+// Color tab logic
+var hexField = document.getElementById('hex-field');
+
+hexField.addEventListener("keydown", keydown);
+
+function keydown (e){
+    if(e.keyCode===13){
+        hexField.blur();
+    }
+    console.info(e.keyCode);
+}
+
+hexField.addEventListener('blur', () => {
+    defaultColor = hexCode.innerHTML;
+    colorWell.value = defaultColor;
+    cd.style.backgroundColor = defaultColor;
+});
+
+window.addEventListener("load", startup, false);
+
+function startup() {
+    colorWell.addEventListener("input", updateFirst, false);
+    colorWell.addEventListener("change", updateAll, false);
+    colorWell.select();
+}
+
+function updateFirst(event) {
+
+    if (cd) {
+        cd.style.backgroundColor = event.target.value;
+        hexCode.innerHTML = event.target.value;
+    }
+}
+
+function updateAll(event) {
+    document.querySelectorAll("#color-display").forEach(function(cd) {
+        //cd.style.backgroundColor = event.target.value;
+    });
+}
+
 // Check if the user clicked on Apply color.
 var applyColor = document.getElementById('apply-color');
 
@@ -240,17 +247,21 @@ function ApplyBG(bg) {
 
         // Check the page selector form
         var pageSelector;
+        var regex;
         if (thisPageOnly.checked)
             pageSelector = 1;
         else if (allPagesFrom.checked)
             pageSelector = 2;
-        else if (domainSregex)
+        else if (domainSregex) {
             pageSelector = 3;
+            regex = regexField.innerHTML;
+        }
 
         // Emit message with background to the app running on the active website
         chrome.tabs.sendMessage(tabs[0].id,
             {
                 pSelect: pageSelector,
+                regex: regex,
                 background: bg
             },
             function(response) {

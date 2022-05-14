@@ -11,7 +11,7 @@
 <body>
     <div class="modal-header">
         <h1 class="logo">
-        <img src="images/logo_128.png" alt="Cubefish" class="logo-icon">Cubefish <span class="version">v.(1.2)ALPHA</span>
+        <img src="images/logo_128.png" alt="Cubefish" class="logo-icon">Cubefish <span class="version">v.(1.3)ALPHA</span>
         </h1>
     </div>
 
@@ -32,8 +32,13 @@
                 <input type="radio" id="all-p" name="pageSelect">
                 <label for="all-p" id="all-p-label">All pages from <span>nowhere?</span></label><br>
                 <input type="radio" id="regex-p" name="pageSelect">
-                <label for="regex-p">Domain specific RegEx</label>
+                <label for="regex-p">Hostname specific RegEx:</label>
             </form>
+            <div id="regex-container" class="modal-content">
+                <div class="messageContainer">
+                    <div id="regex-field" class="message" type="text" spellcheck="false" contenteditable="true">regex</div>
+                </div>
+            </div>
         </div>
         <!-- Collapsibles -->
         <div class="collapsible"><div class="collIcon"></div>Presets</div>
@@ -81,7 +86,7 @@
     
     <div id="List" class="tabcontent">
         <h3>Paris</h3>
-        <p>Paris is the capital of France.</p> 
+        <p>Paris is the capital of France.</p>
     </div>
       
     <div id="Info" class="tabcontent">

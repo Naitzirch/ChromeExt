@@ -8,11 +8,20 @@
 var site = location.href;
 var hostname = location.hostname;
 var siteList = {};
+var hostnameList = {};
+var regexA = [];
 var imgURL;
 var bgColor;
-chrome.storage.sync.get(['sites'], function(result) {
+chrome.storage.sync.get(['sites', 'hostnames'], function(result) {
+    console.log(result);
     if (result.sites) {
         siteList = result.sites;
+    }
+    if (result.hostnames) {
+        hostnameList = result.hostnames;
+        if (hostnameList[hostname].regexA) {
+            regexA = hostnameList[hostname].regexA;
+        }
     }
 
     // Set background if site is found in siteList
@@ -22,6 +31,21 @@ chrome.storage.sync.get(['sites'], function(result) {
             document.body.style.backgroundColor = background;
         else {
             document.body.style.backgroundImage = `url(${background})`;
+        }
+    }
+    // Apply background to regex if hostname in hostnameList
+    else if (regexA.length > 0) {
+        for (var i = regexA.length - 1; i >= 0; i--) {
+            var re = new RegExp(regexA[i].regex);
+            if (re.test(site)) { // match site to regex
+                var background = regexA[i].background;
+                if (isHex(background))
+                    document.body.style.backgroundColor = background;
+                else {
+                    document.body.style.backgroundImage = `url(${background})`;
+                }
+                break;
+            }
         }
     }
 });
@@ -43,11 +67,9 @@ chrome.runtime.onMessage.addListener(
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
         if (request.background) {
-            console.log(request);
             var pSelect = request.pSelect;
-            console.log(pSelect);
+            var HNSRegEx = request.regex;
             var background = request.background;
-            console.log(background);
 
             // Apply background immediately
             if (isHex(background)) {
@@ -59,9 +81,29 @@ chrome.runtime.onMessage.addListener(
             }
 
             // Store background + settings for this site
-            siteList[site] = {background: background};
-            chrome.storage.sync.set({sites: siteList}, function() {
-            });
+            switch (pSelect) {
+                case 1: // This page only
+                    siteList[site] = {background: background};
+                    chrome.storage.sync.set({sites: siteList}, function() {});
+                    break;
+                case 2: // All pages from hostname
+                    HNSRegEx = hostname.replace(/[-[\]{}()*+?.,\\/^$|#\s]/g, '\\$&');
+                case 3: // Hostname specefic regex
+
+                    const index = regexA.findIndex(el => el.regex === HNSRegEx);
+                    if (index >= 0) {
+                        regexA[index] = { regex: HNSRegEx, background: background };
+                    }
+                    else {
+                        regexA.push({ regex: HNSRegEx, background: background });
+                    }
+                    
+                    hostnameList[hostname] = {regexA: regexA};
+                    chrome.storage.sync.set({hostnames: hostnameList}, function() {});
+                    break;
+                default: // Preview (store nothing)
+                    break;
+            }
             
             sendResponse({farewell: "goodbye"});
         }

@@ -79,6 +79,10 @@ a:link, a:visited {
     display: none;
 }
 
+.tabcontent2 {
+    display: none;
+}
+
 /* Page selector */
 #page-selector {
     padding-top: 1em;
@@ -219,6 +223,35 @@ a:link, a:visited {
     border-radius: 12px;
     border: 2px solid grey;
     cursor: pointer;
+}
+
+/* List page */
+
+.list-container {
+    margin: 1em;
+    padding: 1em;
+    border: 1px solid gainsboro;
+}
+
+.list-entry-container {
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+    border: 1px solid gainsboro;
+}
+
+.entry-button {
+    height: 16px;
+    padding: 4px;
+}
+
+.entry-input-field {
+    width: calc(100% - 48px);
+    height: 24px;
+    background-color: rgb(214, 210, 255);
+    border: 0;
+    outline: 0;
+    padding: 0 0.5em;
 }
 
 /* scrollbar */

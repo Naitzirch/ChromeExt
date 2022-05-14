@@ -99,28 +99,37 @@ var tabList = document.getElementsByClassName('tablinks');
 var k;
 for (k = 0; k < tabList.length; k++) {
     tabList[k].addEventListener('click', function() {
-        return openTab(this);
+        return openTab(this, "tabcontent", "tablinks");
     });
 }
 
-function openTab(curTab) {
-    var i, tabcontent, tablinks, cityName, curTabContent;
-    cityName = curTab.innerHTML;
-    tabcontent = document.getElementsByClassName("tabcontent");
+function openTab(curTab, tabcontentClass, tablinksClass) {
+    var i, tabcontent, tablinks, tabName, curTabContent;
+    tabName = curTab.name;
+    tabcontent = document.getElementsByClassName(tabcontentClass);
     for (i = 0; i < tabcontent.length; i++) {
       tabcontent[i].style.display = "none";
     }
-    tablinks = document.getElementsByClassName("tablinks");
+    tablinks = document.getElementsByClassName(tablinksClass);
     for (i = 0; i < tablinks.length; i++) {
       tablinks[i].className = tablinks[i].className.replace(" active", "");
     }
     curTab.className += " active";
-    curTabContent = document.getElementById(cityName);
+    curTabContent = document.getElementById(tabName);
     curTabContent.style.display = "block";
 }
 
 // Get the element with id="defaultOpen" and click on it
 document.getElementById("defaultOpen").click();
+
+tabList = document.getElementsByClassName('tablinks2');
+for (k = 0; k < tabList.length; k++) {
+    tabList[k].addEventListener('click', function() {
+        return openTab(this, "tabcontent2", "tablinks2");
+    });
+}
+
+document.getElementById("defaultOpen2").click();
 
 // Collapsibles
 var collIcon = document.getElementsByClassName("collIcon");

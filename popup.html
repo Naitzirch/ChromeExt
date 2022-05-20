@@ -11,7 +11,7 @@
 <body>
     <div class="modal-header">
         <h1 class="logo">
-        <img src="images/logo_128.png" alt="Cubefish" class="logo-icon">Cubefish <span class="version">v.(1.4)ALPHA</span>
+        <img src="images/logo_128.png" alt="Cubefish" class="logo-icon">Cubefish <span class="version">v.(1.5)ALPHA</span>
         </h1>
     </div>
 
@@ -44,6 +44,7 @@
         <div class="collapsible"><div class="collIcon"></div>Presets</div>
         <div class="content">
             <div id="preset-container">
+                <!-- gets populated later on -->
             </div>
         </div>
         <div class="collapsible"><div class="collIcon"></div>Color background</div>
@@ -90,17 +91,17 @@
             <button class="tablinks2" name="RegEx">RegEx</button>
         </div>
         <div id="Single-Pages" class="tabcontent2">
-            <div class="list-container">
-                <div class="list-entry-container">
-                    <div class="entry-button copy-button"><img src="images/copy.png"></div>
-                    <input type="text" class="entry-input-field" value="https://google.com">
-                    <div class="entry-button delete-button"><img src="images/delete.png"></div>
+
+            <div class="list-container" id="current-page">
+                <div class="title">Current Page</div>
+                <div class="list-entry-container" id="current-page-container">
+                    <div id="bg-not-found">There is currently no background selected for this page specifically.</div>
                 </div>
-                <div class="list-entry-container">
-                    <div class="entry-button copy-button"><img src="images/copy.png"></div>
-                    <input type="text" class="entry-input-field" value="https://google.com">
-                    <div class="entry-button delete-button"><img src="images/delete.png"></div>
-                </div>
+            </div>
+
+            <div class="list-container" id="page-list">
+                <div class="title">Page List</div>
+                <!-- gets populated later on -->
             </div>
         </div>
         <div id="RegEx" class="tabcontent2">

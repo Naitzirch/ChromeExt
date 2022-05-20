@@ -15,46 +15,56 @@ var thisPageOnly = document.getElementById('one-p');
 
 var regexField = document.getElementById('regex-field');
     
-// Request information from the app running on the site
-var siteList;
+// Request information from chrome storage
 var site;
 var hostname;
+var siteList = {};
+var hostnameList = {};
+var regexA = [];
 var defaultColor;
-var ibpB;
 window.addEventListener('load', (event) => {
+
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-        // Check if we are on an internal browser page
-        var ibp = "chrome://";
-        ibpB = tabs[0].url.substring(0, ibp.length) === ibp;
-        if (! ibpB ) {
-            // Request data from app
-            chrome.tabs.sendMessage(tabs[0].id, "siteData", function(response) {
-                // Log app's response
-                if (response) {
-                    siteList = response.siteList;
-                    site = response.site;
-                    hostname = response.hostname;
+        tab = tabs[0];
+        site = tab.url;
+        hostname = (new URL(site)).hostname;
 
-                    // Everything that needs initialization with site data
-
-                    // set domain in page-select form
-                    allPagesFrom.labels[0].firstElementChild.innerHTML = hostname;
-                    regexField.innerHTML = hostname.replace(/[-[\]{}()*+?.,\\/^$|#\s]/g, '\\$&');
-
-                    // set color inside the color tab
-                    if (site in siteList) {
-                        var background = siteList[site].background;
-                        if (isHex(background)) {
-                            hexCode.innerHTML = background;
-                            defaultColor = hexCode.innerHTML;
-                            cd.style.backgroundColor = defaultColor;
-                            colorWell.value = defaultColor;
-                        }
+        // Request data chrome storage
+        chrome.storage.sync.get(['sites', 'hostnames'], function(result) {
+            // result
+            if (result) {
+                if (result.sites) {
+                    siteList = result.sites;
+                }
+                if (result.hostnames) {
+                    hostnameList = result.hostnames;
+                    if (hostnameList[hostname].regexA) {
+                        regexA = hostnameList[hostname].regexA;
                     }
                 }
 
-            });
-        }
+                // Everything that needs initialization storage data
+
+                // set domain in page-select form
+                allPagesFrom.labels[0].firstElementChild.innerHTML = hostname;
+                regexField.innerHTML = hostname.replace(/[-[\]{}()*+?.,\\/^$|#\s]/g, '\\$&');
+
+                // set color inside the color tab
+                if (site in siteList) {
+                    var background = siteList[site].background;
+                    if (isHex(background)) {
+                        hexCode.innerHTML = background;
+                        defaultColor = hexCode.innerHTML;
+                        cd.style.backgroundColor = defaultColor;
+                        colorWell.value = defaultColor;
+                    }
+                }
+
+                // Populate Page List
+                populatePageList(site, siteList);
+            }
+
+        });
     });
 });
 
@@ -86,13 +96,6 @@ imgURL.addEventListener('click', function(){
     }
 });
 
-// Prevent users from pasting in rich content
-// var ce = document.querySelector('[contenteditable]');
-// ce.addEventListener('paste', function (e) {
-//     e.preventDefault();
-//     var text = e.clipboardData.getData('text/plain');
-//     document.execCommand('insertText', false, text);
-// });
 
 // Tabs
 var tabList = document.getElementsByClassName('tablinks');
@@ -261,7 +264,7 @@ function ApplyBG(bg) {
             pageSelector = 1;
         else if (allPagesFrom.checked)
             pageSelector = 2;
-        else if (domainSregex) {
+        else if (domainSregex.checked) {
             pageSelector = 3;
             regex = regexField.innerHTML;
         }
@@ -281,6 +284,63 @@ function ApplyBG(bg) {
     });
 }
 
+// Populate Page List
+
+function populatePageList(site, siteList) {
+    var pageList = document.getElementById('page-list');
+    var currentPage = document.getElementById('current-page');
+    var currentPageContainer = document.getElementById('current-page-container');
+
+    var website = site;
+    var websiteBG;
+    var entry;
+    if (siteList[site]) {
+        websiteBG = siteList[site].background;
+        entry = 
+        `
+        <div class="list-entry-container">
+            <div class="entry-line">
+                <input type="text" class="entry-input-field" spellcheck="false" value="${website}">
+                <div class="entry-button delete-button"><img src="images/delete.png"></div>
+            </div>
+            <div class="entry-line">
+                <div class="entry-button copy-button"><img src="images/copy.png"></div>
+                <input type="text" class="entry-input-field" spellcheck="false" value="${websiteBG}">
+            </div>
+        </div>
+        `;
+
+        currentPage.removeChild(currentPageContainer);
+        currentPage.innerHTML += entry;
+    }
+
+    Object.keys(siteList).forEach(function(k) {
+        website = k;
+        websiteBG = siteList[k].background;
+
+        const re = /chrome-extension:\/\/[a-z]+\/presets\/images\//;
+        if (re.test(websiteBG)) {
+            websiteBG = websiteBG.split(re)[1];
+            websiteBG = websiteBG.split(/\.[a-z]+/)[0]; //remove file extension
+        }
+
+        entry = 
+        `
+        <div class="list-entry-container">
+            <div class="entry-line">
+                <input type="text" class="entry-input-field" spellcheck="false" value="${website}">
+                <div class="entry-button delete-button"><img src="images/delete.png"></div>
+            </div>
+            <div class="entry-line">
+                <div class="entry-button copy-button"><img src="images/copy.png"></div>
+                <input type="text" class="entry-input-field" spellcheck="false" value="${websiteBG}">
+            </div>
+        </div>
+        `;
+
+        pageList.innerHTML += entry;
+    });
+}
 
 // Helper functions
 function isHex(inputString) {

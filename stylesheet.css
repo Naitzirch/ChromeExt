@@ -195,11 +195,6 @@ a:link, a:visited {
 
 /* Presets */
 
-/* .flex-container {
-    display: flex;
-    justify-content: space-between;
-} */
-
 #preset-container {
     overflow: auto;
     max-height: 15em;
@@ -230,14 +225,30 @@ a:link, a:visited {
 .list-container {
     margin: 1em;
     padding: 1em;
+    padding-top: 0;
     border: 1px solid gainsboro;
 }
 
 .list-entry-container {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     overflow: hidden;
-    border: 1px solid gainsboro;
+    border: 1px solid rgb(218, 179, 255);
+    margin-bottom: 1px;
+}
+
+.title {
+    text-align: center;
+    font-size: medium;
+    padding: 0.5em;
+}
+
+#bg-not-found {
+    padding: 5px;
+}
+
+.entry-line {
+    display: flex;
 }
 
 .entry-button {
@@ -246,7 +257,7 @@ a:link, a:visited {
 }
 
 .entry-input-field {
-    width: calc(100% - 48px);
+    width: calc(100% - 24px);
     height: 24px;
     background-color: rgb(214, 210, 255);
     border: 0;

@@ -13,6 +13,7 @@ var regexA = [];
 var imgURL;
 var bgColor;
 chrome.storage.sync.get(['sites', 'hostnames'], function(result) {
+    console.log(location);
     console.log(result);
     if (result.sites) {
         siteList = result.sites;
@@ -79,6 +80,8 @@ chrome.runtime.onMessage.addListener(
             else {
                 document.body.style.backgroundImage = `url(${background})`;
             }
+            // note to self: check if page corresponds to regex 
+            // so you know if you need to apply it directly
 
             // Store background + settings for this site
             switch (pSelect) {

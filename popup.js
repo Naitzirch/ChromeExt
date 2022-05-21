@@ -35,15 +35,16 @@ window.addEventListener('load', (event) => {
             if (result) {
                 if (result.sites) {
                     siteList = result.sites;
+                    console.log(result);
                 }
                 if (result.hostnames) {
                     hostnameList = result.hostnames;
-                    if (hostnameList[hostname].regexA) {
+                    if (hostnameList[hostname] && hostnameList[hostname].regexA) {
                         regexA = hostnameList[hostname].regexA;
                     }
                 }
 
-                // Everything that needs initialization storage data
+                // Everything that needs initialization with storage data
 
                 // set domain in page-select form
                 allPagesFrom.labels[0].firstElementChild.innerHTML = hostname;
@@ -62,6 +63,7 @@ window.addEventListener('load', (event) => {
 
                 // Populate Page List
                 populatePageList(site, siteList);
+                //populateRegExList();
             }
 
         });
@@ -151,10 +153,6 @@ for (i = 0; i < coll.length; i++) {
         } 
     });
 }
-
-// Page Selector logic
-
-
 
 // Preset tab logic
 {
@@ -251,7 +249,7 @@ applyIMG.addEventListener('click', function(){
 });
 
 function ApplyBG(bg) {
-    if (ibpB) {
+    if (false) {
         return;
     }
     // Check which tab is the running tab
@@ -284,18 +282,81 @@ function ApplyBG(bg) {
     });
 }
 
+function removeBG(button) {
+    var page = button.previousElementSibling.value;
+    if (page in siteList) {
+        //update visually
+        var ListEntryContainer = button.parentNode.parentNode;
+        var ListContainer = ListEntryContainer.parentNode;
+        var pageList = document.getElementById('page-list');
+
+        var nobg = 
+            `<div class="list-entry-container" id="current-page-container">
+                <div class="bg-not-found">There is currently no background selected for this page specifically.</div>
+            </div>`;
+
+        // In case deleted from Current Page
+        if (ListContainer.id === "current-page") {
+            
+            // update Current Page
+            ListContainer.removeChild(ListEntryContainer);
+            ListContainer.innerHTML += nobg;
+
+            // update Page List
+            var pListCurrent = document.getElementById('current');
+            pageList.removeChild(pListCurrent);
+
+            chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+                chrome.tabs.sendMessage(tabs[0].id, "removeBG", function(response) {});
+            });
+        }
+        // In case deleted from Page List
+        else if (ListContainer.id === "page-list") {
+            if (ListEntryContainer.id && ListEntryContainer.id === "current") {
+                var currentPage = document.getElementById('current-page');
+                currentPage.removeChild(currentPage.firstElementChild.nextElementSibling);
+                currentPage.innerHTML += nobg;
+                chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+                    chrome.tabs.sendMessage(tabs[0].id, "removeBG", function(response) {});
+                });
+            }
+            ListContainer.removeChild(ListEntryContainer);
+        }
+
+        // Check if Page List is empty
+        if (pageList.childElementCount === 1) {
+            nobg = 
+            `<div class="list-entry-container" id="empty-list-container">
+                <div class="bg-not-found"><i>It's quiet here... too quiet.</i></div>
+            </div>`;
+            pageList.innerHTML += nobg;
+        }
+
+
+
+
+        // remove from storage
+        delete siteList[page];
+        console.log(siteList);
+        chrome.storage.sync.remove("sites");
+        chrome.storage.sync.set({sites: siteList});
+    }
+}
+
 // Populate Page List
 
 function populatePageList(site, siteList) {
     var pageList = document.getElementById('page-list');
     var currentPage = document.getElementById('current-page');
     var currentPageContainer = document.getElementById('current-page-container');
+    var emptyListContainer = document.getElementById('empty-list-container');
 
     var website = site;
     var websiteBG;
     var entry;
     if (siteList[site]) {
         websiteBG = siteList[site].background;
+        websiteBG = stripIfPreset(websiteBG);
         entry = 
         `
         <div class="list-entry-container">
@@ -314,19 +375,24 @@ function populatePageList(site, siteList) {
         currentPage.innerHTML += entry;
     }
 
+    if (Object.keys(siteList).length !== 0) {
+        pageList.removeChild(emptyListContainer);
+    }
+
     Object.keys(siteList).forEach(function(k) {
         website = k;
         websiteBG = siteList[k].background;
 
-        const re = /chrome-extension:\/\/[a-z]+\/presets\/images\//;
-        if (re.test(websiteBG)) {
-            websiteBG = websiteBG.split(re)[1];
-            websiteBG = websiteBG.split(/\.[a-z]+/)[0]; //remove file extension
+        websiteBG = stripIfPreset(websiteBG);
+
+        var special = "";
+        if (website === site) {
+            special = ` id="current"`;
         }
 
         entry = 
         `
-        <div class="list-entry-container">
+        <div class="list-entry-container"${special}>
             <div class="entry-line">
                 <input type="text" class="entry-input-field" spellcheck="false" value="${website}">
                 <div class="entry-button delete-button"><img src="images/delete.png"></div>
@@ -340,6 +406,24 @@ function populatePageList(site, siteList) {
 
         pageList.innerHTML += entry;
     });
+
+    // Check if user clicked on a cross to remove a bg
+    const crossArray = document.getElementsByClassName('delete-button');
+    for (var l = 0; l < crossArray.length; l++) {
+        crossArray[l].addEventListener("click", function() {
+            removeBG(this);
+        });
+    }
+}
+
+// Strips preset links from chrome-extension:etc so it leaves only the preset's name
+function stripIfPreset(websiteBG) {
+    const re = /chrome-extension:\/\/[a-z]+\/presets\/images\//;
+    if (re.test(websiteBG)) {
+        websiteBG = websiteBG.split(re)[1];
+        websiteBG = websiteBG.split(/\.[a-z]+/)[0]; //remove file extension
+    }
+    return websiteBG;
 }
 
 // Helper functions

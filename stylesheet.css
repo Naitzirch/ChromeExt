@@ -222,6 +222,11 @@ a:link, a:visited {
 
 /* List page */
 
+#page-list {
+    max-height: 256px;
+    overflow: auto;
+}
+
 .list-container {
     margin: 1em;
     padding: 1em;
@@ -243,7 +248,7 @@ a:link, a:visited {
     padding: 0.5em;
 }
 
-#bg-not-found {
+.bg-not-found {
     padding: 5px;
 }
 

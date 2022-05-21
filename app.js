@@ -13,8 +13,6 @@ var regexA = [];
 var imgURL;
 var bgColor;
 chrome.storage.sync.get(['sites', 'hostnames'], function(result) {
-    console.log(location);
-    console.log(result);
     if (result.sites) {
         siteList = result.sites;
     }
@@ -55,18 +53,20 @@ chrome.storage.sync.get(['sites', 'hostnames'], function(result) {
 // listeners
 
 // Site Data request
-chrome.runtime.onMessage.addListener(
-    function(request, sender, sendResponse) {
-        if (request === "siteData") {
-            sendResponse({siteList: siteList, site: site, hostname: hostname});
-        }
-    }
-);
+// chrome.runtime.onMessage.addListener(
+//     function(request, sender, sendResponse) {
+//         if (request === "siteData") {
+//             sendResponse({siteList: siteList, site: site, hostname: hostname});
+//         }
+//     }
+// );
 
 
-// Background applied
+
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
+
+        // Background applied
         if (request.background) {
             var pSelect = request.pSelect;
             var HNSRegEx = request.regex;
@@ -110,9 +110,15 @@ chrome.runtime.onMessage.addListener(
             
             sendResponse({farewell: "goodbye"});
         }
+
+        // Background removed
+        else if (request === "removeBG") {
+            document.body.style.backgroundImage = "";
+            document.body.style.backgroundColor = "";
+        }
+
     }
 );
-
 
 // Helper functions
 function isHex(inputString) {

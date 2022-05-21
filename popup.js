@@ -151,9 +151,9 @@ function initCollapsibles() {
             this.classList.toggle("active");
             this.firstElementChild.classList.toggle("active");
             var content = this.nextElementSibling;
-            if (content.style.maxHeight){
+            if (content && content.style.maxHeight){
                 content.style.maxHeight = null;
-            } else {
+            } else if (content) {
                 content.style.maxHeight = content.scrollHeight + "px";
             } 
         });
@@ -350,9 +350,71 @@ function removeBG(button) {
 }
 
 function removeRegEx(button) {
-    var value = button.previousElementSibling.value;
+    var regex;
+    var removeHost;
+    var removeHostB = false;
+    var cNode = button.parentNode.parentNode;
+    var pNode = cNode.parentNode;
+
+    // In case a regex gets removed
+    if (button.classList.contains("delete-regex")) {
+        regex = button.previousElementSibling.value;
+        removeHost = (pNode.parentNode.firstElementChild.innerText || pNode.parentNode.firstElementChild.textContent);
+        if (pNode.childElementCount === 1) {
+            cNode = pNode.parentNode;
+            pNode = cNode.parentNode;
+            removeHostB = true;
+        }
+    }
+    // In case a regex list gets removed
+    else if (button.classList.contains("delete-regex-list")) {
+        removeHost = (button.parentNode.innerText || button.parentNode.textContent);
+        removeHostB = true;
+    }
+    
+    // regex within the list for hostname have id's
+    // regex within the "Current Page" have names that match the id's
+    // if regex entry gets removed from "Current Page"
+    if (removeHost === hostname && button.parentNode.parentNode.parentNode.id === "current-RegEx") {
+        var current = document.getElementById(hostname);
+        if (removeHostB) {
+            current.parentNode.removeChild(current);
+        }
+        else {
+            var listRegex = document.getElementById(button.parentNode.parentNode.name);
+            listRegex.parentNode.removeChild(listRegex);
+        }
+    }
+    // if regex entry gets removed from within the list
+    else if (removeHost === hostname) {
+        var curRegEx = document.getElementById("current-RegEx");
+        if (removeHostB) {
+            curRegEx.removeChild(curRegEx.firstElementChild.nextElementSibling);
+        }
+        else {
+            var curRegExEntry = document.getElementsByName(button.parentNode.parentNode.id)[0];
+            curRegExEntry.parentNode.removeChild(curRegExEntry);
+        }
+    }
+    
+    pNode.removeChild(cNode);
+
+
 
     // remove from storage
+    if (removeHostB) {
+        delete hostnameList[removeHost];
+        chrome.storage.sync.remove("hostnames");
+        chrome.storage.sync.set({hostnames: hostnameList});
+    }
+    else if (regex) {
+        regexA = regexA.filter(function(item) {
+            return item !== regex;
+        });
+        hostnameList[removeHost].regexA = regexA;
+        chrome.storage.sync.remove("hostnames");
+        chrome.storage.sync.set({hostnames: hostnameList});        
+    }
 }
 
 // Populate Page List
@@ -432,39 +494,46 @@ function populatePageList(site, siteList) {
 
 function populateRegExList(hostname, hostnameList) {
 
+    // populate "Current Page"
+    var currentPage = document.getElementById('current-RegEx');
+    var currentRegExContainer = document.getElementById('current-RegEx-container');
+    if (hostnameList[hostname]) {
+        var entryEntryList = constructEntryEntry(hostname, false);
+        
+        var entry = 
+        `
+        <div>
+            <div class="collapsible-2 list-entry-container"><div class="collIcon-2"></div>
+                ${hostname} <div class="entry-button delete-regex-list"><img src="images/delete.png"></div>
+            </div>
+            <div class="content clean-list-container">
+                ${entryEntryList}
+            </div>
+        </div>
+        `;
+
+        currentPage.removeChild(currentRegExContainer);
+        currentPage.innerHTML += entry;
+    }
+
+    // populate RegEx list
     var RegExList = document.getElementById('RegEx-list');
     Object.keys(hostnameList).forEach(function(k) {
 
         // construct the entry
-        var entryEntryList = "";
-        var regexA = hostnameList[k].regexA;
-        for (var m = 0; m < regexA.length; m++) {
-            var regex = regexA[m].regex;
-            var websiteBG = regexA[m].background;
-            var entryEntry = 
-            `
-            <div class="list-entry-container">
-                <div class="entry-line">
-                    <input type="text" class="entry-input-field" spellcheck="false" value="${regex}">
-                    <div class="entry-button delete-regex"><img src="images/delete.png"></div>
-                </div>
-                <div class="entry-line">
-                    <div class="entry-button copy-button"><img src="images/copy.png"></div>
-                    <input type="text" class="entry-input-field" spellcheck="false" value="${websiteBG}">
-                </div>
-            </div>
-            `;
-            entryEntryList += entryEntry;
-        }
-        
+        var entryEntryList = constructEntryEntry(k, true);
 
+        var special = ""
+        if (k === hostname) {special = ` id="${hostname}"`;}
         var entry =
         `
-        <div class="collapsible-2 list-entry-container"><div class="collIcon-2"></div>
-            ${k} <div class="entry-button delete-button"><img src="images/delete.png"></div>
-        </div>
-        <div class="content clean-list-container">
-            ${entryEntryList}
+        <div${special}>
+            <div class="collapsible-2 list-entry-container"><div class="collIcon-2"></div>
+                ${k} <div class="entry-button delete-regex-list"><img src="images/delete.png"></div>
+            </div>
+            <div class="content clean-list-container">
+                ${entryEntryList}
+            </div>
         </div>
         `;
 
@@ -474,14 +543,51 @@ function populateRegExList(hostname, hostnameList) {
 
     });
 
-    // Check if user clicked on a cross to remove a bg
-    const crossArray = document.getElementsByClassName('delete-regex');
+    // Check if user clicked on a cross to remove regex
+    var crossArray1 = document.getElementsByClassName('delete-regex');
+    var crossArray2 = document.getElementsByClassName('delete-regex-list');
+    var crossArray = []
+        .concat(Array.from(crossArray1))
+        .concat(Array.from(crossArray2));
     for (var l = 0; l < crossArray.length; l++) {
         crossArray[l].addEventListener("click", function() {
             removeRegEx(this);
         });
     }
 
+}
+
+function constructEntryEntry(k, setID) {
+var entryEntryList = "";
+console.log(hostnameList);
+    var regexA = hostnameList[k].regexA;
+    for (var m = regexA.length - 1; m >= 0 ; m--) {
+        var regex = regexA[m].regex;
+        var websiteBG = regexA[m].background;
+        websiteBG = stripIfPreset(websiteBG);
+        var special = "";
+        if (setID && k === hostname) {
+            special = ` id="r${m}"`;
+        }
+        else if (k === hostname){
+            special = ` name="r${m}"`;
+        }
+        var entryEntry = 
+        `
+        <div class="list-entry-container"${special}>
+            <div class="entry-line">
+                <input type="text" class="entry-input-field" spellcheck="false" value="${regex}">
+                <div class="entry-button delete-regex"><img src="images/delete.png"></div>
+            </div>
+            <div class="entry-line">
+                <div class="entry-button copy-button"><img src="images/copy.png"></div>
+                <input type="text" class="entry-input-field" spellcheck="false" value="${websiteBG}">
+            </div>
+        </div>
+        `;
+        entryEntryList += entryEntry;
+    }
+    return entryEntryList;
 }
 
 // Strips preset links from chrome-extension:etc so it leaves only the preset's name

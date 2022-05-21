@@ -102,7 +102,14 @@ a:link, a:visited {
     font-size: 15px;
 }
 
-.active, .collapsible:hover {
+.collapsible-2 {
+    transition: 0.3s;
+    cursor: pointer;
+    padding: 0.5em;
+    flex-direction: row !important;
+}
+
+.active, .collapsible:hover, .collapsible-2:hover {
     background-color: #d9d9d9;
 }
 
@@ -115,7 +122,15 @@ a:link, a:visited {
     margin: 0 0.5em;
 }
 
+.collIcon-2:after {
+    content: '\23F5';
+}
+
 /* uitgeklapt */
+.collIcon-2.active:after {
+    content: '\23F7';
+}
+
 .collIcon.active:after {
     content: "\2B9F";
 }
@@ -222,12 +237,9 @@ a:link, a:visited {
 
 /* List page */
 
-#page-list {
+.list-container {
     max-height: 256px;
     overflow: auto;
-}
-
-.list-container {
     margin: 1em;
     padding: 1em;
     padding-top: 0;
@@ -258,7 +270,13 @@ a:link, a:visited {
 
 .entry-button {
     height: 16px;
-    padding: 4px;
+    padding: 3px;
+    border: 1px solid darkgray;
+    cursor: pointer;
+}
+
+.delete-button {
+    margin-left: auto;
 }
 
 .entry-input-field {
@@ -269,6 +287,9 @@ a:link, a:visited {
     outline: 0;
     padding: 0 0.5em;
 }
+
+/* RegEx tab CSS */
+
 
 /* scrollbar */
 /* width */

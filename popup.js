@@ -63,7 +63,8 @@ window.addEventListener('load', (event) => {
 
                 // Populate Page List
                 populatePageList(site, siteList);
-                //populateRegExList();
+                populateRegExList(hostname, hostnameList);
+                initCollapsibles();
             }
 
         });
@@ -136,22 +137,27 @@ for (k = 0; k < tabList.length; k++) {
 
 document.getElementById("defaultOpen2").click();
 
-// Collapsibles
-var collIcon = document.getElementsByClassName("collIcon");
-var coll = document.getElementsByClassName("collapsible");
-var i;
+function initCollapsibles() {
+    // Collapsibles
+    var nodes = document.getElementsByClassName("collapsible");
+    var nodes2 = document.getElementsByClassName("collapsible-2");
+    var i;
+    var coll = []
+        .concat(Array.from(nodes))
+        .concat(Array.from(nodes2));
 
-for (i = 0; i < coll.length; i++) {
-    coll[i].addEventListener("click", function() {
-        this.classList.toggle("active");
-        this.firstElementChild.classList.toggle("active");
-        var content = this.nextElementSibling;
-        if (content.style.maxHeight){
-            content.style.maxHeight = null;
-        } else {
-            content.style.maxHeight = content.scrollHeight + "px";
-        } 
-    });
+    for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function() {
+            this.classList.toggle("active");
+            this.firstElementChild.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content.style.maxHeight){
+                content.style.maxHeight = null;
+            } else {
+                content.style.maxHeight = content.scrollHeight + "px";
+            } 
+        });
+    }
 }
 
 // Preset tab logic
@@ -343,6 +349,12 @@ function removeBG(button) {
     }
 }
 
+function removeRegEx(button) {
+    var value = button.previousElementSibling.value;
+
+    // remove from storage
+}
+
 // Populate Page List
 
 function populatePageList(site, siteList) {
@@ -414,6 +426,62 @@ function populatePageList(site, siteList) {
             removeBG(this);
         });
     }
+}
+
+// Populate RegEx List
+
+function populateRegExList(hostname, hostnameList) {
+
+    var RegExList = document.getElementById('RegEx-list');
+    Object.keys(hostnameList).forEach(function(k) {
+
+        // construct the entry
+        var entryEntryList = "";
+        var regexA = hostnameList[k].regexA;
+        for (var m = 0; m < regexA.length; m++) {
+            var regex = regexA[m].regex;
+            var websiteBG = regexA[m].background;
+            var entryEntry = 
+            `
+            <div class="list-entry-container">
+                <div class="entry-line">
+                    <input type="text" class="entry-input-field" spellcheck="false" value="${regex}">
+                    <div class="entry-button delete-regex"><img src="images/delete.png"></div>
+                </div>
+                <div class="entry-line">
+                    <div class="entry-button copy-button"><img src="images/copy.png"></div>
+                    <input type="text" class="entry-input-field" spellcheck="false" value="${websiteBG}">
+                </div>
+            </div>
+            `;
+            entryEntryList += entryEntry;
+        }
+        
+
+        var entry =
+        `
+        <div class="collapsible-2 list-entry-container"><div class="collIcon-2"></div>
+            ${k} <div class="entry-button delete-button"><img src="images/delete.png"></div>
+        </div>
+        <div class="content clean-list-container">
+            ${entryEntryList}
+        </div>
+        `;
+
+
+        // add entry to RegExList
+        RegExList.innerHTML += entry;
+
+    });
+
+    // Check if user clicked on a cross to remove a bg
+    const crossArray = document.getElementsByClassName('delete-regex');
+    for (var l = 0; l < crossArray.length; l++) {
+        crossArray[l].addEventListener("click", function() {
+            removeRegEx(this);
+        });
+    }
+
 }
 
 // Strips preset links from chrome-extension:etc so it leaves only the preset's name

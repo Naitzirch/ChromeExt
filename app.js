@@ -12,13 +12,17 @@ var hostnameList = {};
 var regexA = [];
 var imgURL;
 var bgColor;
-chrome.storage.sync.get(['sites', 'hostnames'], function(result) {
+var isThisThingOn;
+chrome.storage.sync.get(['sites', 'hostnames', 'isThisThingOn'], function(result) {
+    if (result.isThisThingOn === false) {
+        return;
+    }
     if (result.sites) {
         siteList = result.sites;
     }
     if (result.hostnames) {
         hostnameList = result.hostnames;
-        if (hostnameList[hostname].regexA) {
+        if (hostnameList[hostname] && hostnameList[hostname].regexA) {
             regexA = hostnameList[hostname].regexA;
         }
     }
@@ -52,17 +56,6 @@ chrome.storage.sync.get(['sites', 'hostnames'], function(result) {
 
 // listeners
 
-// Site Data request
-// chrome.runtime.onMessage.addListener(
-//     function(request, sender, sendResponse) {
-//         if (request === "siteData") {
-//             sendResponse({siteList: siteList, site: site, hostname: hostname});
-//         }
-//     }
-// );
-
-
-
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
 
@@ -87,7 +80,7 @@ chrome.runtime.onMessage.addListener(
             switch (pSelect) {
                 case 1: // This page only
                     siteList[site] = {background: background};
-                    chrome.storage.sync.set({sites: siteList}, function() {});
+                    chrome.storage.sync.set({sites: siteList});
                     break;
                 case 2: // All pages from hostname
                     HNSRegEx = hostname.replace(/[-[\]{}()*+?.,\\/^$|#\s]/g, '\\$&');
@@ -102,7 +95,7 @@ chrome.runtime.onMessage.addListener(
                     }
                     
                     hostnameList[hostname] = {regexA: regexA};
-                    chrome.storage.sync.set({hostnames: hostnameList}, function() {});
+                    chrome.storage.sync.set({hostnames: hostnameList});
                     break;
                 default: // Preview (store nothing)
                     break;

@@ -14,6 +14,8 @@ var thisPageOnly = document.getElementById('one-p');
     domainSregex = document.getElementById('regex-p');
 
 var regexField = document.getElementById('regex-field');
+
+var onOffButton = document.getElementById('on-off-button');
     
 // Request information from chrome storage
 var site;
@@ -22,6 +24,7 @@ var siteList = {};
 var hostnameList = {};
 var regexA = [];
 var defaultColor;
+var isThisThingOn = false;
 window.addEventListener('load', (event) => {
 
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
@@ -30,7 +33,7 @@ window.addEventListener('load', (event) => {
         hostname = (new URL(site)).hostname;
 
         // Request data chrome storage
-        chrome.storage.sync.get(['sites', 'hostnames'], function(result) {
+        chrome.storage.sync.get(['sites', 'hostnames', 'isThisThingOn'], function(result) {
             // result
             if (result) {
                 if (result.sites) {
@@ -43,8 +46,14 @@ window.addEventListener('load', (event) => {
                         regexA = hostnameList[hostname].regexA;
                     }
                 }
+                if (result.isThisThingOn) {
+                    isThisThingOn = result.isThisThingOn;
+                }
 
                 // Everything that needs initialization with storage data
+
+                // set Off/On button
+                onOffButton.checked = isThisThingOn;
 
                 // set domain in page-select form
                 allPagesFrom.labels[0].firstElementChild.innerHTML = hostname;
@@ -91,6 +100,15 @@ for (j = 0; j < apply.length; j++) {
         this.style.backgroundColor = "#bdbdbd";
     });
 }
+
+// Toggle switch checkbox
+onOffButton.addEventListener('change', function(){
+    isThisThingOn = this.checked;
+    chrome.storage.sync.set({isThisThingOn: isThisThingOn});
+
+    chrome.storage.sync.get()
+});
+
 
 // Input field logic
 imgURL.addEventListener('click', function(){
@@ -343,7 +361,6 @@ function removeBG(button) {
 
         // remove from storage
         delete siteList[page];
-        console.log(siteList);
         chrome.storage.sync.remove("sites");
         chrome.storage.sync.set({sites: siteList});
     }
@@ -559,7 +576,6 @@ function populateRegExList(hostname, hostnameList) {
 
 function constructEntryEntry(k, setID) {
 var entryEntryList = "";
-console.log(hostnameList);
     var regexA = hostnameList[k].regexA;
     for (var m = regexA.length - 1; m >= 0 ; m--) {
         var regex = regexA[m].regex;

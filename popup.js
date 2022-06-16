@@ -22,6 +22,7 @@ var site;
 var hostname;
 var siteList = {};
 var hostnameList = {};
+var exemptList = [];
 var regexA = [];
 var defaultColor;
 var isThisThingOn = false;
@@ -33,7 +34,7 @@ window.addEventListener('load', (event) => {
         hostname = (new URL(site)).hostname;
 
         // Request data chrome storage
-        chrome.storage.sync.get(['sites', 'hostnames', 'isThisThingOn'], function(result) {
+        chrome.storage.sync.get(['sites', 'hostnames', 'isThisThingOn', 'exempted'], function(result) {
             // result
             if (result) {
                 if (result.sites) {
@@ -48,6 +49,9 @@ window.addEventListener('load', (event) => {
                 }
                 if (result.isThisThingOn) {
                     isThisThingOn = result.isThisThingOn;
+                }
+                if (result.exempted) {
+                    exemptList = result.exempted;
                 }
 
                 // Everything that needs initialization with storage data
@@ -101,12 +105,33 @@ for (j = 0; j < apply.length; j++) {
     });
 }
 
+// Exempt
+var applyExempt = document.getElementById('apply-exempt');
+
+applyExempt.addEventListener('click', function(){
+    exemptPage();
+});
+
+function exemptPage() {
+    if (exemptList.indexOf(site) === -1) {
+        exemptList.push(site);
+        chrome.storage.sync.set({exempted: exemptList});
+        // message content script to reevaluate background
+        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+            chrome.tabs.sendMessage(tabs[0].id, "reevalBG", function(response) {});
+        });
+    }
+    else {
+        alert("This page is already exempted from all RegEx. Maybe you want to remove the background under Single Pages?");
+    }
+    //console.log(exemptList);
+    //chrome.storage.sync.get(['exempted'], function(result){ console.log(result) });
+}
+
 // Toggle switch checkbox
 onOffButton.addEventListener('change', function(){
     isThisThingOn = this.checked;
     chrome.storage.sync.set({isThisThingOn: isThisThingOn});
-
-    chrome.storage.sync.get()
 });
 
 
@@ -331,7 +356,7 @@ function removeBG(button) {
             pageList.removeChild(pListCurrent);
 
             chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-                chrome.tabs.sendMessage(tabs[0].id, "removeBG", function(response) {});
+                chrome.tabs.sendMessage(tabs[0].id, "reevalBG", function(response) {});
             });
         }
         // In case deleted from Page List
@@ -341,7 +366,7 @@ function removeBG(button) {
                 currentPage.removeChild(currentPage.firstElementChild.nextElementSibling);
                 currentPage.innerHTML += nobg;
                 chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-                    chrome.tabs.sendMessage(tabs[0].id, "removeBG", function(response) {});
+                    chrome.tabs.sendMessage(tabs[0].id, "reevalBG", function(response) {});
                 });
             }
             ListContainer.removeChild(ListEntryContainer);

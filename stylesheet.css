@@ -79,6 +79,10 @@ a:link, a:visited {
     display: none;
 }
 
+.tablinks2 {
+    font-size: 1em !important;
+}
+
 .tabcontent2 {
     display: none;
 }

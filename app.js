@@ -9,49 +9,63 @@ var site = location.href;
 var hostname = location.hostname;
 var siteList = {};
 var hostnameList = {};
+var exemptList = [];
 var regexA = [];
 var imgURL;
 var bgColor;
 var isThisThingOn;
-chrome.storage.sync.get(['sites', 'hostnames', 'isThisThingOn'], function(result) {
-    if (result.isThisThingOn === false) {
-        return;
-    }
-    if (result.sites) {
-        siteList = result.sites;
-    }
-    if (result.hostnames) {
-        hostnameList = result.hostnames;
-        if (hostnameList[hostname] && hostnameList[hostname].regexA) {
-            regexA = hostnameList[hostname].regexA;
-        }
-    }
 
-    // Set background if site is found in siteList
-    if (siteList && site in siteList) {
-        var background = siteList[site].background;
-        if (isHex(background))
-            document.body.style.backgroundColor = background;
-        else {
-            document.body.style.backgroundImage = `url(${background})`;
+evalBG();
+
+function evalBG() {
+    chrome.storage.sync.get(['sites', 'hostnames', 'isThisThingOn', 'exempted'], function(result) {
+        if (result.isThisThingOn === false) {
+            return;
         }
-    }
-    // Apply background to regex if hostname in hostnameList
-    else if (regexA.length > 0) {
-        for (var i = regexA.length - 1; i >= 0; i--) {
-            var re = new RegExp(regexA[i].regex);
-            if (re.test(site)) { // match site to regex
-                var background = regexA[i].background;
-                if (isHex(background))
-                    document.body.style.backgroundColor = background;
-                else {
-                    document.body.style.backgroundImage = `url(${background})`;
-                }
-                break;
+        if (result.sites) {
+            siteList = result.sites;
+        }
+        if (result.hostnames) {
+            hostnameList = result.hostnames;
+            if (hostnameList[hostname] && hostnameList[hostname].regexA) {
+                regexA = hostnameList[hostname].regexA;
             }
         }
-    }
-});
+        if (result.exempted) {
+            exemptList = result.exempted;
+        }
+
+        // Set background if site is found in siteList
+        if (siteList && site in siteList) {
+            var background = siteList[site].background;
+            if (isHex(background))
+                document.body.style.backgroundColor = background;
+            else {
+                document.body.style.backgroundImage = `url(${background})`;
+            }
+        }
+        // check if site is in exemptList
+        else if (exemptList && exemptList.indexOf(site) !== -1) {
+            document.body.style.backgroundImage = "";
+            document.body.style.backgroundColor = "";
+        }
+        // Apply background to regex if hostname in hostnameList
+        else if (regexA.length > 0) {
+            for (var i = regexA.length - 1; i >= 0; i--) {
+                var re = new RegExp(regexA[i].regex);
+                if (re.test(site)) { // match site to regex
+                    var background = regexA[i].background;
+                    if (isHex(background))
+                        document.body.style.backgroundColor = background;
+                    else {
+                        document.body.style.backgroundImage = `url(${background})`;
+                    }
+                    break;
+                }
+            }
+        }
+    });
+}
 
 
 // listeners
@@ -100,15 +114,21 @@ chrome.runtime.onMessage.addListener(
                 default: // Preview (store nothing)
                     break;
             }
-            
-            sendResponse({farewell: "goodbye"});
         }
 
-        // Background removed
-        else if (request === "removeBG") {
-            document.body.style.backgroundImage = "";
-            document.body.style.backgroundColor = "";
+        // // Background removed
+        // else if (request === "removeBG") {
+        //     document.body.style.backgroundImage = "";
+        //     document.body.style.backgroundColor = "";
+        // }
+
+        // update after exempt / background removal
+        else if (request === "reevalBG") {
+            console.log("request sent succesfully");
+            evalBG();
         }
+
+        sendResponse({farewell: "goodbye"});
 
     }
 );

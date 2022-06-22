@@ -9,7 +9,7 @@ var site = location.href;
 var hostname = location.hostname;
 var siteList = {};
 var hostnameList = {};
-var exemptList = [];
+var exemptA = [];
 var regexA = [];
 var imgURL;
 var bgColor;
@@ -30,9 +30,9 @@ function evalBG() {
             if (hostnameList[hostname] && hostnameList[hostname].regexA) {
                 regexA = hostnameList[hostname].regexA;
             }
-        }
-        if (result.exempted) {
-            exemptList = result.exempted;
+            if (hostnameList[hostname] && hostnameList[hostname].exemptA) {
+                exemptA = hostnameList[hostname].exemptA;
+            }
         }
 
         // Set background if site is found in siteList
@@ -44,8 +44,8 @@ function evalBG() {
                 document.body.style.backgroundImage = `url(${background})`;
             }
         }
-        // check if site is in exemptList
-        else if (exemptList && exemptList.indexOf(site) !== -1) {
+        // check if site is in exemptA
+        else if (exemptA.indexOf(site) !== -1) {
             document.body.style.backgroundImage = "";
             document.body.style.backgroundColor = "";
         }
@@ -108,7 +108,8 @@ chrome.runtime.onMessage.addListener(
                         regexA.push({ regex: HNSRegEx, background: background });
                     }
                     
-                    hostnameList[hostname] = {regexA: regexA};
+                    hostnameList[hostname] = hostnameList[hostname] || {};
+                    hostnameList[hostname].regexA = regexA;
                     chrome.storage.sync.set({hostnames: hostnameList});
                     break;
                 default: // Preview (store nothing)

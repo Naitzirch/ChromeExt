@@ -22,7 +22,7 @@ var site;
 var hostname;
 var siteList = {};
 var hostnameList = {};
-var exemptList = [];
+var exemptA = [];
 var regexA = [];
 var defaultColor;
 var isThisThingOn = false;
@@ -45,6 +45,9 @@ window.addEventListener('load', (event) => {
                     hostnameList = result.hostnames;
                     if (hostnameList[hostname] && hostnameList[hostname].regexA) {
                         regexA = hostnameList[hostname].regexA;
+                    }
+                    if (hostnameList[hostname] && hostnameList[hostname].exemptA) {
+                        exemptA = hostnameList[hostname].exemptA;
                     }
                 }
                 if (result.isThisThingOn) {
@@ -113,9 +116,11 @@ applyExempt.addEventListener('click', function(){
 });
 
 function exemptPage() {
-    if (exemptList.indexOf(site) === -1) {
-        exemptList.push(site);
-        chrome.storage.sync.set({exempted: exemptList});
+    if (exemptA.indexOf(site) === -1) {
+        exemptA.push(site);
+        hostnameList[hostname] = hostnameList[hostname] || {};
+        hostnameList[hostname].exemptA = exemptA;
+        chrome.storage.sync.set({hostnames: hostnameList});
         // message content script to reevaluate background
         chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
             chrome.tabs.sendMessage(tabs[0].id, "reevalBG", function(response) {});

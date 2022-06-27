@@ -279,7 +279,7 @@ a:link, a:visited {
     cursor: pointer;
 }
 
-.delete-regex-list {
+.delete-regex-list, .delete-exempt-list {
     margin-left: auto;
 }
 

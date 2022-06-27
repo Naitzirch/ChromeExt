@@ -80,6 +80,7 @@ window.addEventListener('load', (event) => {
                 // Populate Page List
                 populatePageList(site, siteList);
                 populateRegExList(hostname, hostnameList);
+                populateExemptList(hostname, hostnameList);
                 initCollapsibles();
             }
 
@@ -464,6 +465,24 @@ function removeRegEx(button) {
     }
 }
 
+function removeExempt(button) {
+    // note to self: fix bug in regex removal
+
+
+    // In case an exempt gets removed
+
+    // In case an exempt list gets removed
+
+    // exempt within the list for hostname have id's
+    // exempt within the "Current Page" have names that match the id's
+    // if exempt entry gets removed from "Current Page"
+
+    // if exempt entry gets removed from within the list
+
+
+    //remove from storage
+}
+
 // Populate Page List
 
 function populatePageList(site, siteList) {
@@ -546,21 +565,22 @@ function populateRegExList(hostname, hostnameList) {
     var currentRegExContainer = document.getElementById('current-RegEx-container');
     if (hostnameList[hostname]) {
         var entryEntryList = constructEntryEntry(hostname, false);
-        
-        var entry = 
-        `
-        <div>
-            <div class="collapsible-2 list-entry-container"><div class="collIcon-2"></div>
-                ${hostname} <div class="entry-button delete-regex-list"><img src="images/delete.png"></div>
+        if (!(entryEntryList === "")) {
+            var entry = 
+            `
+            <div>
+                <div class="collapsible-2 list-entry-container"><div class="collIcon-2"></div>
+                    ${hostname} <div class="entry-button delete-regex-list"><img src="images/delete.png"></div>
+                </div>
+                <div class="content clean-list-container">
+                    ${entryEntryList}
+                </div>
             </div>
-            <div class="content clean-list-container">
-                ${entryEntryList}
-            </div>
-        </div>
-        `;
+            `;
 
-        currentPage.removeChild(currentRegExContainer);
-        currentPage.innerHTML += entry;
+            currentPage.removeChild(currentRegExContainer);
+            currentPage.innerHTML += entry;
+        }
     }
 
     // populate RegEx list
@@ -569,6 +589,9 @@ function populateRegExList(hostname, hostnameList) {
 
         // construct the entry
         var entryEntryList = constructEntryEntry(k, true);
+        if (entryEntryList === "") {
+            return;
+        }
 
         var special = ""
         if (k === hostname) {special = ` id="${hostname}"`;}
@@ -605,8 +628,11 @@ function populateRegExList(hostname, hostnameList) {
 }
 
 function constructEntryEntry(k, setID) {
-var entryEntryList = "";
+    var entryEntryList = "";
     var regexA = hostnameList[k].regexA;
+    if (!regexA) {
+        return "";
+    }
     for (var m = regexA.length - 1; m >= 0 ; m--) {
         var regex = regexA[m].regex;
         var websiteBG = regexA[m].background;
@@ -628,6 +654,105 @@ var entryEntryList = "";
             <div class="entry-line">
                 <div class="entry-button copy-button"><img src="images/copy.png"></div>
                 <input type="text" class="entry-input-field" spellcheck="false" value="${websiteBG}">
+            </div>
+        </div>
+        `;
+        entryEntryList += entryEntry;
+    }
+    return entryEntryList;
+}
+
+// populate ExemptList
+
+function populateExemptList(hostname, hostnameList) {
+
+    // populate "Current Page"
+    var currentPage = document.getElementById('current-Exempt');
+    var currentExemptContainer = document.getElementById('current-Exempt-container');
+    if (hostnameList[hostname]) {
+        var entryEntryList = constructEntryEntryExempt(hostname, false);
+        if (!(entryEntryList === "")) {
+            var entry = 
+            `
+            <div>
+                <div class="collapsible-2 list-entry-container"><div class="collIcon-2"></div>
+                    ${hostname} <div class="entry-button delete-exempt-list"><img src="images/delete.png"></div>
+                </div>
+                <div class="content clean-list-container">
+                    ${entryEntryList}
+                </div>
+            </div>
+            `;
+
+            currentPage.removeChild(currentExemptContainer);
+            currentPage.innerHTML += entry;
+        }
+    }
+
+    // populate Exempt List
+    var ExemptList = document.getElementById('Exempt-list');
+    Object.keys(hostnameList).forEach(function(k) {
+
+        // construct the entry
+        var entryEntryList = constructEntryEntryExempt(k, true);
+        if (entryEntryList === "") {
+            return;
+        }
+
+        var special = ""
+        if (k === hostname) {special = ` id="${hostname}"`;}
+        var entry =
+        `
+        <div${special}>
+            <div class="collapsible-2 list-entry-container"><div class="collIcon-2"></div>
+                ${k} <div class="entry-button delete-exempt-list"><img src="images/delete.png"></div>
+            </div>
+            <div class="content clean-list-container">
+                ${entryEntryList}
+            </div>
+        </div>
+        `;
+
+
+        // add entry to RegExList
+        ExemptList.innerHTML += entry;
+
+    });
+
+    // Check if user clicked on a cross to remove exempt
+    var crossArray1 = document.getElementsByClassName('delete-exempt');
+    var crossArray2 = document.getElementsByClassName('delete-exempt-list');
+    var crossArray = []
+        .concat(Array.from(crossArray1))
+        .concat(Array.from(crossArray2));
+    for (var l = 0; l < crossArray.length; l++) {
+        crossArray[l].addEventListener("click", function() {
+            removeExempt(this);
+        });
+    }
+
+}
+
+function constructEntryEntryExempt(k, setID) {
+    var entryEntryList = "";
+    var exemptA = hostnameList[k].exemptA;
+    if (!exemptA) {
+        return "";
+    }
+    for (var m = exemptA.length - 1; m >= 0; m--) {
+        var special = "";
+        if (setID && k === hostname) {
+            special = ` id="e${m}"`;
+        }
+        else if (k === hostname){
+            special = ` name="e${m}"`;
+        }
+        var entryEntry = 
+        `
+        <div class="list-entry-container"${special}>
+            <div class="entry-line">
+                <input type="text" class="entry-input-field" spellcheck="false" value="${exemptA[m]}">
+                <div class="entry-button delete-exempt"><img src="images/delete.png"></div>
             </div>
         </div>
         `;

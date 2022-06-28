@@ -12,6 +12,10 @@
             "regexA": [
                 {"regex": "*", "background": "#fffbbb"},
                 {"regex": "AAAA", "background": "#AAAAAA"}
+            ],
+            "exemptA": [
+                "https://google.com"
+                "https://google.com/search/"
             ]
         },
         "www.foobar.com": {

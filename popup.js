@@ -423,13 +423,14 @@ function removeRegEx(button) {
     // regex within the list for hostname have id's
     // regex within the "Current Page" have names that match the id's
     // if regex entry gets removed from "Current Page"
-    if (removeHost === hostname && button.parentNode.parentNode.parentNode.id === "current-RegEx") {
-        var current = document.getElementById(hostname);
+    if (removeHost === hostname &&
+        (pNode.id === "current-RegEx" || pNode.parentNode.parentNode.id === "current-RegEx")) {
+        var current = document.getElementById("r" + hostname);
         if (removeHostB) {
             current.parentNode.removeChild(current);
         }
         else {
-            var listRegex = document.getElementById(button.parentNode.parentNode.name);
+            var listRegex = document.getElementById(button.parentNode.parentNode.getAttribute("name"));
             listRegex.parentNode.removeChild(listRegex);
         }
     }
@@ -451,14 +452,17 @@ function removeRegEx(button) {
 
     // remove from storage
     if (removeHostB) {
-        delete hostnameList[removeHost];
+        delete hostnameList[removeHost].regexA;
         chrome.storage.sync.remove("hostnames");
         chrome.storage.sync.set({hostnames: hostnameList});
     }
     else if (regex) {
+        console.log(regexA);
+        console.log(regex);
         regexA = regexA.filter(function(item) {
-            return item !== regex;
+            return item.regex !== regex;
         });
+        console.log(regexA);
         hostnameList[removeHost].regexA = regexA;
         chrome.storage.sync.remove("hostnames");
         chrome.storage.sync.set({hostnames: hostnameList});        
@@ -466,21 +470,74 @@ function removeRegEx(button) {
 }
 
 function removeExempt(button) {
-    // note to self: fix bug in regex removal
-
+    var exempt;
+    var removeHost;
+    var removeHostB = false;
+    var cNode = button.parentNode.parentNode;
+    var pNode = cNode.parentNode;
 
     // In case an exempt gets removed
-
+    if (button.classList.contains("delete-exempt")) {
+        exempt = button.previousElementSibling.value;
+        removeHost = (pNode.parentNode.firstElementChild.innerText || pNode.parentNode.firstElementChild.textContent);
+        if (pNode.childElementCount === 1) {
+            cNode = pNode.parentNode;
+            pNode = cNode.parentNode;
+            removeHostB = true;
+        }
+    }
     // In case an exempt list gets removed
+    else if (button.classList.contains("delete-exempt-list")) {
+        removeHost = (button.parentNode.innerText || button.parentNode.textContent);
+        removeHostB = true;
+    }
 
     // exempt within the list for hostname have id's
     // exempt within the "Current Page" have names that match the id's
     // if exempt entry gets removed from "Current Page"
-
+    if (removeHost === hostname &&
+        (pNode.id === "current-Exempt" || pNode.parentNode.parentNode.id === "current-Exempt")) {
+        var current = document.getElementById("e" + hostname);
+        console.log(removeHostB);
+        if (removeHostB) {
+            console.log(current.parentNode);
+            current.parentNode.removeChild(current);
+        }
+        else {
+            var listExempt = document.getElementById(button.parentNode.parentNode.getAttribute("name"));
+            listExempt.parentNode.removeChild(listExempt);
+        }
+    }
     // if exempt entry gets removed from within the list
+    else if (removeHost === hostname) {
+        var curExempt = document.getElementById("current-Exempt");
+        if (removeHostB) {
+            curExempt.removeChild(curExempt.firstElementChild.nextElementSibling);
+        }
+        else {
+            console.log(button.parentNode.parentNode.id);
+            var curExemptEntry = document.getElementsByName(button.parentNode.parentNode.id)[0];
+            curExemptEntry.parentNode.removeChild(curExemptEntry);
+        }
+    }
+    
+    pNode.removeChild(cNode);
 
 
     //remove from storage
+    if (removeHostB) {
+        delete hostnameList[removeHost].exemptA;
+        chrome.storage.sync.remove("hostnames");
+        chrome.storage.sync.set({hostnames: hostnameList});
+    }
+    else if (exempt) {
+        exemptA = exemptA.filter(function(item) {
+            return item !== exempt;
+        });
+        hostnameList[removeHost].exemptA = exemptA;
+        chrome.storage.sync.remove("hostnames");
+        chrome.storage.sync.set({hostnames: hostnameList});     
+    }
 }
 
 // Populate Page List
@@ -594,7 +651,7 @@ function populateRegExList(hostname, hostnameList) {
         }
 
         var special = ""
-        if (k === hostname) {special = ` id="${hostname}"`;}
+        if (k === hostname) {special = ` id="r${hostname}"`;}
         var entry =
         `
         <div${special}>
@@ -700,7 +757,7 @@ function populateExemptList(hostname, hostnameList) {
         }
 
         var special = ""
-        if (k === hostname) {special = ` id="${hostname}"`;}
+        if (k === hostname) {special = ` id="e${hostname}"`;}
         var entry =
         `
         <div${special}>

@@ -20,6 +20,8 @@ evalBG();
 function evalBG() {
     chrome.storage.sync.get(['sites', 'hostnames', 'isThisThingOn', 'exempted'], function(result) {
         if (result.isThisThingOn === false) {
+            document.body.style.backgroundImage = "";
+            document.body.style.backgroundColor = "";
             return;
         }
         if (result.sites) {

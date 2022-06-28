@@ -123,9 +123,7 @@ function exemptPage() {
         hostnameList[hostname].exemptA = exemptA;
         chrome.storage.sync.set({hostnames: hostnameList});
         // message content script to reevaluate background
-        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-            chrome.tabs.sendMessage(tabs[0].id, "reevalBG", function(response) {});
-        });
+        reevalBG();
     }
     else {
         alert("This page is already exempted from all RegEx. Maybe you want to remove the background under Single Pages?");
@@ -138,6 +136,7 @@ function exemptPage() {
 onOffButton.addEventListener('change', function(){
     isThisThingOn = this.checked;
     chrome.storage.sync.set({isThisThingOn: isThisThingOn});
+    reevalBG();
 });
 
 
@@ -361,9 +360,7 @@ function removeBG(button) {
             var pListCurrent = document.getElementById('current');
             pageList.removeChild(pListCurrent);
 
-            chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-                chrome.tabs.sendMessage(tabs[0].id, "reevalBG", function(response) {});
-            });
+            reevalBG();
         }
         // In case deleted from Page List
         else if (ListContainer.id === "page-list") {
@@ -371,9 +368,7 @@ function removeBG(button) {
                 var currentPage = document.getElementById('current-page');
                 currentPage.removeChild(currentPage.firstElementChild.nextElementSibling);
                 currentPage.innerHTML += nobg;
-                chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-                    chrome.tabs.sendMessage(tabs[0].id, "reevalBG", function(response) {});
-                });
+                reevalBG();
             }
             ListContainer.removeChild(ListEntryContainer);
         }
@@ -679,6 +674,7 @@ function populateRegExList(hostname, hostnameList) {
     for (var l = 0; l < crossArray.length; l++) {
         crossArray[l].addEventListener("click", function() {
             removeRegEx(this);
+            reevalBG();
         });
     }
 
@@ -785,6 +781,7 @@ function populateExemptList(hostname, hostnameList) {
     for (var l = 0; l < crossArray.length; l++) {
         crossArray[l].addEventListener("click", function() {
             removeExempt(this);
+            reevalBG();
         });
     }
 
@@ -829,6 +826,13 @@ function stripIfPreset(websiteBG) {
 }
 
 // Helper functions
+
+function reevalBG() {
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, "reevalBG", function(response) {});
+    });
+}
+
 function isHex(inputString) {
     inputString = inputString.substring(1);
     if (inputString.length > 6) {

@@ -13,5 +13,5 @@ it might not work on all websites, namely where the body isn't visible.
 # How to install
 1. Download the repo.
 2. Go to chrome://extensions and select "Developer mode" in the top right.
-3. Click on "Load unpacked" (top right) and select the folder that contains the repo as root directory.
+3. Click on "Load unpacked" (top left) and select the folder that contains the repo as root directory.
 4. Done.

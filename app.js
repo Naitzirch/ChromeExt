@@ -19,7 +19,10 @@ evalBG();
 
 function evalBG() {
     chrome.storage.sync.get(['sites', 'hostnames', 'isThisThingOn', 'exempted'], function(result) {
-        if (result.isThisThingOn === false) {
+        isThisThingOn = (result.isThisThingOn || false);
+        console.log(isThisThingOn);
+        if (isThisThingOn === false) {
+            console.log("owo");
             document.body.style.backgroundImage = "";
             document.body.style.backgroundColor = "";
             return;
@@ -36,7 +39,7 @@ function evalBG() {
                 exemptA = hostnameList[hostname].exemptA;
             }
         }
-
+        console.log(siteList);
         // Set background if site is found in siteList
         if (siteList && site in siteList) {
             var background = siteList[site].background;
@@ -66,6 +69,10 @@ function evalBG() {
                 }
             }
         }
+        else { // if site is not in siteList or hostnameList
+            document.body.style.backgroundImage = "";
+            document.body.style.backgroundColor = "";
+        }
     });
 }
 
@@ -74,23 +81,11 @@ function evalBG() {
 
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
-
         // Background applied
-        if (request.background) {
+        if (request.background && isThisThingOn) {
             var pSelect = request.pSelect;
-            var HNSRegEx = request.regex;
+            var HNSRegEx = request.regex; // Host Name Specific
             var background = request.background;
-
-            // Apply background immediately
-            if (isHex(background)) {
-                document.body.style.backgroundColor = background;
-                document.body.style.backgroundImage = "";
-            }
-            else {
-                document.body.style.backgroundImage = `url(${background})`;
-            }
-            // note to self: check if page corresponds to regex 
-            // so you know if you need to apply it directly
 
             // Store background + settings for this site
             switch (pSelect) {
@@ -117,17 +112,12 @@ chrome.runtime.onMessage.addListener(
                 default: // Preview (store nothing)
                     break;
             }
+            // Apply background immediately
+            evalBG();
         }
 
-        // // Background removed
-        // else if (request === "removeBG") {
-        //     document.body.style.backgroundImage = "";
-        //     document.body.style.backgroundColor = "";
-        // }
-
-        // update after exempt / background removal
-        else if (request === "reevalBG") {
-            console.log("request sent succesfully");
+        // reeval when on/off button is toggled or bg is deleted
+        if (request === "reevalBG") {
             evalBG();
         }
 
@@ -135,6 +125,9 @@ chrome.runtime.onMessage.addListener(
 
     }
 );
+
+// reevaluate background when tab gets focussed
+document.addEventListener('visibilitychange', evalBG);
 
 // Helper functions
 function isHex(inputString) {

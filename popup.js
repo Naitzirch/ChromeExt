@@ -88,7 +88,6 @@ window.addEventListener('load', (event) => {
     });
 });
 
-
 // Fancy button smh...
 var j;
 for (j = 0; j < apply.length; j++) {
@@ -134,6 +133,7 @@ function exemptPage() {
 
 // Toggle switch checkbox
 onOffButton.addEventListener('change', function(){
+    console.log("hi");
     isThisThingOn = this.checked;
     chrome.storage.sync.set({isThisThingOn: isThisThingOn});
     reevalBG();

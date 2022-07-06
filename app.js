@@ -1,7 +1,6 @@
 // Naitzirch 2022
 // 
-// Handle setting/receiving backgrounds and
-// storing them for specific websites
+// Handle background evaluation
 
 
 // Get the site data from storage
@@ -81,41 +80,6 @@ function evalBG() {
 
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
-        // Background applied
-        if (request.background && isThisThingOn) {
-            var pSelect = request.pSelect;
-            var HNSRegEx = request.regex; // Host Name Specific
-            var background = request.background;
-
-            // Store background + settings for this site
-            switch (pSelect) {
-                case 1: // This page only
-                    siteList[site] = {background: background};
-                    chrome.storage.sync.set({sites: siteList});
-                    break;
-                case 2: // All pages from hostname
-                    HNSRegEx = hostname.replace(/[-[\]{}()*+?.,\\/^$|#\s]/g, '\\$&');
-                case 3: // Hostname specefic regex
-
-                    const index = regexA.findIndex(el => el.regex === HNSRegEx);
-                    if (index >= 0) {
-                        regexA[index] = { regex: HNSRegEx, background: background };
-                    }
-                    else {
-                        regexA.push({ regex: HNSRegEx, background: background });
-                    }
-                    
-                    hostnameList[hostname] = hostnameList[hostname] || {};
-                    hostnameList[hostname].regexA = regexA;
-                    chrome.storage.sync.set({hostnames: hostnameList});
-                    break;
-                default: // Preview (store nothing)
-                    break;
-            }
-            // Apply background immediately
-            evalBG();
-        }
-
         // reeval when on/off button is toggled or bg is deleted
         if (request === "reevalBG") {
             evalBG();

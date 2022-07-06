@@ -127,8 +127,6 @@ function exemptPage() {
     else {
         alert("This page is already exempted from all RegEx. Maybe you want to remove the background under Single Pages?");
     }
-    //console.log(exemptList);
-    //chrome.storage.sync.get(['exempted'], function(result){ console.log(result) });
 }
 
 // Toggle switch checkbox
@@ -303,9 +301,6 @@ applyIMG.addEventListener('click', function(){
 });
 
 function ApplyBG(bg) {
-    if (false) {
-        return;
-    }
     // Check which tab is the running tab
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
 
@@ -321,19 +316,64 @@ function ApplyBG(bg) {
             regex = regexField.innerHTML;
         }
 
+        request = {
+            pSelect: pageSelector,
+            regex: regex,
+            background: bg
+        };
+
+        backgroundApplied(request);
+
         // Emit message with background to the app running on the active website
-        chrome.tabs.sendMessage(tabs[0].id,
-            {
-                pSelect: pageSelector,
-                regex: regex,
-                background: bg
-            },
-            function(response) {
-            // Log app's response
-            console.log(response.farewell);
-        });
+        // chrome.tabs.sendMessage(tabs[0].id,
+        //     {
+        //         pSelect: pageSelector,
+        //         regex: regex,
+        //         background: bg
+        //     },
+        //     function(response) {
+        //     // Log app's response
+        //     console.log(response.farewell);
+        // });
         
     });
+}
+
+function backgroundApplied(request) {
+    // Background applied
+    if (request.background && isThisThingOn) {
+        var pSelect = request.pSelect;
+        var HNSRegEx = request.regex; // Host Name Specific
+        var background = request.background;
+
+        // Store background + settings for this site
+        switch (pSelect) {
+            case 1: // This page only
+                siteList[site] = {background: background};
+                chrome.storage.sync.set({sites: siteList});
+                break;
+            case 2: // All pages from hostname
+                HNSRegEx = hostname.replace(/[-[\]{}()*+?.,\\/^$|#\s]/g, '\\$&');
+            case 3: // Hostname specefic regex
+
+                const index = regexA.findIndex(el => el.regex === HNSRegEx);
+                if (index >= 0) {
+                    regexA[index] = { regex: HNSRegEx, background: background };
+                }
+                else {
+                    regexA.push({ regex: HNSRegEx, background: background });
+                }
+                
+                hostnameList[hostname] = hostnameList[hostname] || {};
+                hostnameList[hostname].regexA = regexA;
+                chrome.storage.sync.set({hostnames: hostnameList});
+                break;
+            default: // Preview (store nothing)
+                break;
+        }
+        // Apply background immediately
+        reevalBG();
+    }
 }
 
 function removeBG(button) {
@@ -828,9 +868,18 @@ function stripIfPreset(websiteBG) {
 // Helper functions
 
 function reevalBG() {
+    // Backgrounds cannot be applied to internal browser pages
+    if (isBrowserPage()) {
+        return;
+    }
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         chrome.tabs.sendMessage(tabs[0].id, "reevalBG", function(response) {});
     });
+}
+
+function isBrowserPage() {
+    var browser = "chrome://";
+    return (site.substr(0, browser.length) === browser);
 }
 
 function isHex(inputString) {

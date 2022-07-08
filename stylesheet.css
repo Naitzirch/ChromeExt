@@ -309,6 +309,11 @@ a:link, a:visited {
     flex-direction: column;
 }
 
+/* backgrounds unavailable */
+#bg-unav {
+    padding: 2em;
+    background-color:rgb(227, 238, 248);
+}
 
 /* scrollbar */
 /* width */

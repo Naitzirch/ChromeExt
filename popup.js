@@ -77,6 +77,10 @@ window.addEventListener('load', (event) => {
                     }
                 }
 
+                // Tell if this page is available for a background
+                // i.e. is not an internal browser page
+                backgroundAvailable();
+
                 // Populate Page List
                 populatePageList(site, siteList);
                 populateRegExList(hostname, hostnameList);
@@ -87,6 +91,24 @@ window.addEventListener('load', (event) => {
         });
     });
 });
+
+function backgroundAvailable() {
+    if (isBrowserPage()) {
+        const Add = document.getElementById("Add");
+        const newAdd = document.createElement('div');
+        newAdd.id = "Add";
+        newAdd.classList.add("tabcontent");
+        newAdd.style.display = "block";
+        newAdd.innerHTML =
+        `
+        <div id="bg-unav">
+            <h5 id="unav-message">Backgrounds are not available for this page:<br></h5>
+            ${site}
+        </div>
+        `;
+        Add.parentNode.replaceChild(newAdd, Add);
+    }
+}
 
 // Fancy button smh...
 var j;

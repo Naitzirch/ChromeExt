@@ -6,6 +6,10 @@ html, body {
     width: 384px;
 }
 
+ol {
+    padding-left: 20px;
+}
+
 h1 {
     font-family: 'Menlo', monospace;
     font-size: 2em;
@@ -14,11 +18,23 @@ h1 {
     color: #22577E;
 }
 
-a:link, a:visited {
+h2 {
+    /* margin: 0; */
+    color: #22577E;
+}
+
+.info {
+    padding: 1em;
+    padding-top: 0;
+    max-height: 28.4em;
+    overflow: auto;
+}
+
+/* a:link, a:visited {
     color: #000;
     outline: 0;
     text-decoration: none;
-}
+} */
 
 .modal-header {
     align-items: center;

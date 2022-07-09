@@ -1,0 +1,22 @@
+Adding a background
+1. Select a scope on which to apply a background, this could be This page, All pages from 
+a website, or pages corresponding to a regular expression evaluated on the domain they are
+applied on where the least recently added expression has the highest priority.
+(If none of the scopes is selected, choosing a background is treated as a preview)
+2. Choose a background, this can be one of the presets, a colour background or a custom background.
+For the custom background, find any image on the web, right click it and select "Copy image address".
+Paste this address (ending in an image file extension like .png or .gif) in the custom background
+field and hit Apply.
+
+Getting Rid of a background
+If a background is applied to one page only, it can be removed under the List tab
+under Single Pages. Otherwise the corresponding regex can be removed under the RegEx tab.
+If you want no backgrounds applied to a certain page, you can also exempt that page from
+background evaluation using the Exempt button, this will add it to the Exempt pages list, here
+"exempts" can also be removed again.
+
+Credits
+
+Building the extension: Naitzirch
+
+Presets: link

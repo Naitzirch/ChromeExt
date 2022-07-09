@@ -324,30 +324,25 @@ applyIMG.addEventListener('click', function(){
 });
 
 function ApplyBG(bg) {
-    // Check which tab is the running tab
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    // Check the page selector form
+    var pageSelector;
+    var regex;
+    if (thisPageOnly.checked)
+        pageSelector = 1;
+    else if (allPagesFrom.checked)
+        pageSelector = 2;
+    else if (domainSregex.checked) {
+        pageSelector = 3;
+        regex = regexField.innerHTML;
+    }
 
-        // Check the page selector form
-        var pageSelector;
-        var regex;
-        if (thisPageOnly.checked)
-            pageSelector = 1;
-        else if (allPagesFrom.checked)
-            pageSelector = 2;
-        else if (domainSregex.checked) {
-            pageSelector = 3;
-            regex = regexField.innerHTML;
-        }
+    request = {
+        pSelect: pageSelector,
+        regex: regex,
+        background: bg
+    };
 
-        request = {
-            pSelect: pageSelector,
-            regex: regex,
-            background: bg
-        };
-
-        backgroundApplied(request);
-        
-    });
+    backgroundApplied(request);
 }
 
 function backgroundApplied(request) {
@@ -380,7 +375,12 @@ function backgroundApplied(request) {
                 chrome.storage.sync.set({hostnames: hostnameList});
                 break;
             default: // Preview (store nothing)
-                break;
+                // query running tab and
+                // send info for preview
+                chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+                    chrome.tabs.sendMessage(tabs[0].id, {background: background}, function(response) {});
+                });
+                return;
         }
         // Apply background immediately
         reevalBG();

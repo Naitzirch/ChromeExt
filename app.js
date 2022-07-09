@@ -85,6 +85,20 @@ chrome.runtime.onMessage.addListener(
             evalBG();
         }
 
+        // preview
+        if (request.background) {
+            var background = request.background;
+            console.log(background);
+            console.log(isHex(background));
+            if (isHex(background)) {
+                document.body.style.backgroundColor = background;
+                document.body.style.backgroundImage = "";
+            }
+            else {
+                document.body.style.backgroundImage = `url(${background})`;
+            }
+        }
+
         sendResponse({farewell: "goodbye"});
 
     }

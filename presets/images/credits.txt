@@ -1,8 +1,47 @@
-trees: Avery Sauer: https://dribbble.com/shots/3146149-Tree-Pattern-v2
-MAVI_tiles: MAVI Magdalena Witczak: https://dribbble.com/shots/8502881-Gold-pattern
-retro_numbers: Sebastian Abboud: https://dribbble.com/shots/9922053-Pattern-Play
-hive: Tartila: https://www.vectorstock.com/royalty-free-vector/orange-seamless-honey-combs-pattern-honeycomb-vector-21611442
+If you are an artist of one of the works below and would like your artwork removed from the
+extension please contact me at aleatorionet2020@gmail.com
 
-nyancat: : https://impakt.nl/general/2022/good-gifs/
-victorianR: : https://4vector.com/free-vector/repeatable-vector-pattern-24417
-sakura: : https://backgroundlabs.com/cherry-blossom-seamless-background/
+Name:	x
+Artist:	x
+Link:	x
+Visited:dd/mm/YYYY
+
+Name:	trees
+Artist:	Avery Sauer
+Link:	https://dribbble.com/shots/3146149-Tree-Pattern-v2
+Visited:09/07/2022
+
+Name:	MAVI_tiles
+Artist:	Magdalena Witczak
+Link:	https://dribbble.com/shots/8502881-Gold-pattern
+Visited:09/07/2022
+
+Name:	retro_numbers
+Artist:	Sebastian Abboud
+Link:	https://dribbble.com/shots/9922053-Pattern-Play
+Visited:09/07/2022
+
+Name:	hive
+Artist:	Tartila
+Link:	https://www.vectorstock.com/royalty-free-vector/orange-seamless-honey-combs-pattern-honeycomb-vector-21611442
+Visited:09/07/2022
+
+Name:	nyancat
+Artist:	Chris Torres
+Link:	https://impakt.nl/general/2022/good-gifs/
+Visited:09/07/2022
+
+Name:	victorianR
+Artist:	
+Link:	https://4vector.com/free-vector/repeatable-vector-pattern-24417
+Visited:09/07/2022
+
+Name:	sakura
+Artist:	
+Link:	https://backgroundlabs.com/cherry-blossom-seamless-background/
+Visited:09/07/2022
+
+Name:	paisley
+Artist:	
+Link:	https://4vector.com/free-vector/european-fine-pattern-background-03-vector-15172
+Visited:09/07/2022

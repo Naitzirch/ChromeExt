@@ -26,5 +26,9 @@
     "hive": {
         "name": "hive",
         "bg": "hive.jpg"
+    },
+    "paisley": {
+        "name": "paisley",
+        "bg": "paisley.jpg"
     }
 }

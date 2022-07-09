@@ -86,6 +86,7 @@ window.addEventListener('load', (event) => {
                 populateRegExList(hostname, hostnameList);
                 populateExemptList(hostname, hostnameList);
                 initCollapsibles();
+                initCopyButtons();
             }
 
         });
@@ -345,18 +346,6 @@ function ApplyBG(bg) {
         };
 
         backgroundApplied(request);
-
-        // Emit message with background to the app running on the active website
-        // chrome.tabs.sendMessage(tabs[0].id,
-        //     {
-        //         pSelect: pageSelector,
-        //         regex: regex,
-        //         background: bg
-        //     },
-        //     function(response) {
-        //     // Log app's response
-        //     console.log(response.farewell);
-        // });
         
     });
 }
@@ -670,6 +659,19 @@ function populatePageList(site, siteList) {
     }
 }
 
+// Check if user clicked on copy button
+function initCopyButtons() {
+    const copyArray = document.getElementsByClassName('copy-button');
+    for (var l = 0; l < copyArray.length; l++) {
+        copyArray[l].addEventListener("click", function(){
+            var copyText = this.nextElementSibling;
+            copyText.select();
+            copyText.setSelectionRange(0, 99999); /* For mobile devices */
+            navigator.clipboard.writeText(copyText.value);
+        });
+    }
+}
+
 // Populate RegEx List
 
 function populateRegExList(hostname, hostnameList) {
@@ -900,8 +902,13 @@ function reevalBG() {
 }
 
 function isBrowserPage() {
-    var browser = "chrome://";
-    return (site.substr(0, browser.length) === browser);
+    const browsers = ["chrome://"];
+    for (i = 0; i < browsers.length; i++) {
+        if (site.substr(0, browsers[i].length) === browsers[i]) {
+            return true;
+        };
+    }
+    return false;
 }
 
 function isHex(inputString) {

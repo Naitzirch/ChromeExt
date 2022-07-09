@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "CUBEFISH",
     "description": "CUstom Background Extension For Internet Site Hypermedia. Add a custom background to your websites.",
-    "version": "2.3",
+    "version": "2.4",
     "icons": {
         "16": "/images/logo_16.png",
         "48": "/images/logo_48.png",

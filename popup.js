@@ -39,7 +39,6 @@ window.addEventListener('load', (event) => {
             if (result) {
                 if (result.sites) {
                     siteList = result.sites;
-                    console.log(result);
                 }
                 if (result.hostnames) {
                     hostnameList = result.hostnames;
@@ -154,7 +153,6 @@ function exemptPage() {
 
 // Toggle switch checkbox
 onOffButton.addEventListener('change', function(){
-    console.log("hi");
     isThisThingOn = this.checked;
     chrome.storage.sync.set({isThisThingOn: isThisThingOn});
     reevalBG();
@@ -503,12 +501,9 @@ function removeRegEx(button) {
         chrome.storage.sync.set({hostnames: hostnameList});
     }
     else if (regex) {
-        console.log(regexA);
-        console.log(regex);
         regexA = regexA.filter(function(item) {
             return item.regex !== regex;
         });
-        console.log(regexA);
         hostnameList[removeHost].regexA = regexA;
         chrome.storage.sync.remove("hostnames");
         chrome.storage.sync.set({hostnames: hostnameList});        
@@ -544,9 +539,7 @@ function removeExempt(button) {
     if (removeHost === hostname &&
         (pNode.id === "current-Exempt" || pNode.parentNode.parentNode.id === "current-Exempt")) {
         var current = document.getElementById("e" + hostname);
-        console.log(removeHostB);
         if (removeHostB) {
-            console.log(current.parentNode);
             current.parentNode.removeChild(current);
         }
         else {
@@ -561,7 +554,6 @@ function removeExempt(button) {
             curExempt.removeChild(curExempt.firstElementChild.nextElementSibling);
         }
         else {
-            console.log(button.parentNode.parentNode.id);
             var curExemptEntry = document.getElementsByName(button.parentNode.parentNode.id)[0];
             curExemptEntry.parentNode.removeChild(curExemptEntry);
         }

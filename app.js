@@ -19,9 +19,7 @@ evalBG();
 function evalBG() {
     chrome.storage.sync.get(['sites', 'hostnames', 'isThisThingOn', 'exempted'], function(result) {
         isThisThingOn = (result.isThisThingOn || false);
-        console.log(isThisThingOn);
         if (isThisThingOn === false) {
-            console.log("owo");
             document.body.style.backgroundImage = "";
             document.body.style.backgroundColor = "";
             return;
@@ -38,7 +36,6 @@ function evalBG() {
                 exemptA = hostnameList[hostname].exemptA;
             }
         }
-        console.log(siteList);
         // Set background if site is found in siteList
         if (siteList && site in siteList) {
             var background = siteList[site].background;
@@ -88,8 +85,6 @@ chrome.runtime.onMessage.addListener(
         // preview
         if (request.background) {
             var background = request.background;
-            console.log(background);
-            console.log(isHex(background));
             if (isHex(background)) {
                 document.body.style.backgroundColor = background;
                 document.body.style.backgroundImage = "";

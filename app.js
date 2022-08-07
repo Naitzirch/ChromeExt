@@ -32,12 +32,19 @@ function evalBG() {
             if (hostnameList[hostname] && hostnameList[hostname].regexA) {
                 regexA = hostnameList[hostname].regexA;
             }
+            else {
+                regexA = [];
+            }
             if (hostnameList[hostname] && hostnameList[hostname].exemptA) {
                 exemptA = hostnameList[hostname].exemptA;
+            }
+            else {
+                exemptA = [];
             }
         }
         // Set background if site is found in siteList
         if (siteList && site in siteList) {
+            console.log("1");
             var background = siteList[site].background;
             if (isHex(background))
                 document.body.style.backgroundColor = background;
@@ -47,11 +54,13 @@ function evalBG() {
         }
         // check if site is in exemptA
         else if (exemptA.indexOf(site) !== -1) {
+            console.log("2");
             document.body.style.backgroundImage = "";
             document.body.style.backgroundColor = "";
         }
         // Apply background to regex if hostname in hostnameList
         else if (regexA.length > 0) {
+            console.log("3");
             for (var i = regexA.length - 1; i >= 0; i--) {
                 var re = new RegExp(regexA[i].regex);
                 if (re.test(site)) { // match site to regex
@@ -66,6 +75,7 @@ function evalBG() {
             }
         }
         else { // if site is not in siteList or hostnameList
+            console.log("4");
             document.body.style.backgroundImage = "";
             document.body.style.backgroundColor = "";
         }

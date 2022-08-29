@@ -14,14 +14,17 @@ var imgURL;
 var bgColor;
 var isThisThingOn;
 
+var initialBGcolor = window.getComputedStyle(document.body, null).getPropertyValue('background-color');
+var initialBGimg = window.getComputedStyle(document.body, null).getPropertyValue('background-image');
+
 evalBG();
 
 function evalBG() {
     chrome.storage.sync.get(['sites', 'hostnames', 'isThisThingOn', 'exempted'], function(result) {
         isThisThingOn = (result.isThisThingOn || false);
         if (isThisThingOn === false) {
-            document.body.style.backgroundImage = "";
-            document.body.style.backgroundColor = "";
+            document.body.style.backgroundImage = initialBGimg;
+            document.body.style.backgroundColor = initialBGcolor;
             return;
         }
         if (result.sites) {
@@ -75,9 +78,15 @@ function evalBG() {
             }
         }
         else { // if site is not in siteList or hostnameList
+            console.log("img: " + initialBGimg);
+            console.log("col: " + initialBGcolor);
             console.log("4");
-            document.body.style.backgroundImage = "";
-            document.body.style.backgroundColor = "";
+            if (initialBGimg) {
+                document.body.style.backgroundImage = initialBGimg;
+            }
+            else {
+                document.body.style.backgroundColor = initialBGcolor;
+            }
         }
     });
 }

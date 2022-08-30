@@ -84,8 +84,6 @@ function evalBG() {
             }
         }
         else { // if site is not in siteList or hostnameList
-            console.log("img: " + initialBGimg);
-            console.log("col: " + initialBGcolor);
             console.log("4");
             if (initialBGimg) {
                 document.body.style.backgroundImage = initialBGimg;

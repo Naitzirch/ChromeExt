@@ -17,6 +17,12 @@ var isThisThingOn;
 var initialBGcolor = window.getComputedStyle(document.body, null).getPropertyValue('background-color');
 var initialBGimg = window.getComputedStyle(document.body, null).getPropertyValue('background-image');
 
+// Check for CSP
+document.addEventListener("securitypolicyviolation", (e) => {
+    console.log("blockedURI: " + e.blockedURI);
+    console.log("violatedDirective: " + e.violatedDirective);
+});
+
 evalBG();
 
 function evalBG() {

@@ -166,6 +166,15 @@ imgURL.addEventListener('click', function(){
     }
 });
 
+var messageList = document.getElementsByClassName('message');
+var x;
+for (x = 0; x < messageList.length; x++) {
+    messageList[x].addEventListener('paste', (e) => {
+        e.preventDefault();
+        const text = e.clipboardData.getData('text/plain');
+        document.execCommand("insertHTML", false, text);
+    });
+}
 
 // Tabs
 var tabList = document.getElementsByClassName('tablinks');

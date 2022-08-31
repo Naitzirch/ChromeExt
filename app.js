@@ -198,6 +198,8 @@ chrome.runtime.onMessage.addListener(
 
         // preview
         if (request.background) {
+            // disconnect the observer to avoid setting initalBG to what should be the preview
+            observer.disconnect();
             var background = request.background;
             if (isHex(background)) {
                 document.body.style.backgroundColor = background;
@@ -206,6 +208,8 @@ chrome.runtime.onMessage.addListener(
             else {
                 document.body.style.backgroundImage = `url(${background})`;
             }
+            // reconnect observer to start looking for external changes again
+            observer.observe(document.body, config);
         }
 
         sendResponse({farewell: "goodbye"});
